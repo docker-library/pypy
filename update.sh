@@ -21,6 +21,6 @@ for version in "${versions[@]}"; do
 	(
 		set -x
 		sed -ri 's/^(ENV PYPY_VERSION) .*/\1 '"$fullVersion"'/' "$version/Dockerfile"
-		#sed -ri 's/^(FROM python):.*/\1:'"$fullVersion"'/' "$version/onbuild/Dockerfile"
+		sed -ri 's/^(FROM pypy):.*/\1:'"$version-$fullVersion"'/' "$version/onbuild/Dockerfile"
 	)
 done
