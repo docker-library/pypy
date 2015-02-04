@@ -7,7 +7,7 @@ RUN apt-get purge -y python.*
 # > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
 ENV LANG C.UTF-8
 
-ENV PYPY_VERSION 2.4.0
+ENV PYPY_VERSION 2.5.0
 
 RUN set -x \
 	&& curl -SL "https://bitbucket.org/pypy/pypy/downloads/pypy-${PYPY_VERSION}-linux64.tar.bz2" \
