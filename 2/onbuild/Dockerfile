@@ -1,4 +1,4 @@
-FROM pypy:2-2.5.1
+FROM pypy:2
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app

@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		libsqlite3-0 \
 	&& rm -rf /var/lib/apt/lists/*
 
-ENV PYPY_VERSION 2.4.0
+ENV PYPY_VERSION 2.5.1
 
 RUN set -x \
 	&& apt-get update && apt-get install -y bzip2 curl --no-install-recommends && rm -rf /var/lib/apt/lists/* \
