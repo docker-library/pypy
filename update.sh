@@ -9,6 +9,8 @@ if [ ${#versions[@]} -eq 0 ]; then
 fi
 versions=( "${versions[@]%/}" )
 
+pipVersion="$(curl -sSL 'https://pypi.python.org/pypi/pip/json' | awk -F '"' '$2 == "version" { print $4 }')"
+
 for version in "${versions[@]}"; do
 	case "$version" in
 		3) pypy="pypy$version";;
@@ -20,7 +22,10 @@ for version in "${versions[@]}"; do
 	
 	(
 		set -x
-		sed -ri 's/^(ENV PYPY_VERSION) .*/\1 '"$fullVersion"'/' "$version"{,/slim}/Dockerfile
+		sed -ri '
+			s/^(ENV PYPY_VERSION) .*/\1 '"$fullVersion"'/;
+			s/^(ENV PYTHON_PIP_VERSION) .*/\1 '"$pipVersion"'/;
+		' "$version"{,/slim}/Dockerfile
 		sed -ri 's/^(FROM pypy):.*/\1:'"$version"'/' "$version/onbuild/Dockerfile"
 	)
 done
