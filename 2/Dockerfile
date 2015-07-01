@@ -14,7 +14,7 @@ RUN set -x \
 		| tar -xjC /usr/local --strip-components=1
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 7.0.3
+ENV PYTHON_PIP_VERSION 7.1.0
 RUN curl -SL 'https://bootstrap.pypa.io/get-pip.py' | pypy \
 	&& pip install --upgrade pip==$PYTHON_PIP_VERSION
 
