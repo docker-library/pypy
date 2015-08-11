@@ -15,7 +15,7 @@ url='git://github.com/docker-library/pypy'
 echo '# maintainer: InfoSiftr <github@infosiftr.com> (@infosiftr)'
 
 for version in "${versions[@]}"; do
-	commit="$(git log -1 --format='format:%H' -- "$version")"
+	commit="$(cd "$version" && git log -1 --format='format:%H' -- Dockerfile $(awk 'toupper($1) == "COPY" { for (i = 2; i < NF; i++) { print $i } }' Dockerfile))"
 	fullVersion="$(grep -m1 'ENV PYPY_VERSION ' "$version/Dockerfile" | cut -d' ' -f3)"
 	versionAliases=( $fullVersion ${fullVersion%.*} ${fullVersion%%.*} )
 	versionAliases=( "${versionAliases[@]/#/$version-}" )
@@ -28,7 +28,7 @@ for version in "${versions[@]}"; do
 	
 	for variant in onbuild slim wheezy; do
 		[ -f "$version/$variant/Dockerfile" ] || continue
-		commit="$(git log -1 --format='format:%H' -- "$version/$variant")"
+		commit="$(cd "$version/$variant" && git log -1 --format='format:%H' -- Dockerfile $(awk 'toupper($1) == "COPY" { for (i = 2; i < NF; i++) { print $i } }' Dockerfile))"
 		echo
 		for va in "${versionAliases[@]}"; do
 			if [ "$va" = 'latest' ]; then
