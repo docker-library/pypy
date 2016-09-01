@@ -1,7 +1,7 @@
 FROM debian:jessie
 
-# remove several traces of debian python
-RUN apt-get purge -y python.*
+# ensure local pypy is preferred over distribution python
+ENV PATH /usr/local/bin:$PATH
 
 # http://bugs.python.org/issue19846
 # > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
