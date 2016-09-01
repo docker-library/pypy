@@ -14,13 +14,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/*
 
 ENV PYPY_VERSION 5.4.0
+ENV PYPY_SHA256SUM bdfea513d59dcd580970cb6f79f3a250d00191fd46b68133d5327e924ca845f8
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 8.1.2
 
 RUN set -ex \
-	&& wget -O- "https://bitbucket.org/pypy/pypy/downloads/pypy2-v${PYPY_VERSION}-linux64.tar.bz2" \
-		| tar -xjC /usr/local --strip-components=1 \
+	&& wget -O pypy.tar.bz2 "https://bitbucket.org/pypy/pypy/downloads/pypy2-v${PYPY_VERSION}-linux64.tar.bz2" \
+	&& echo "$PYPY_SHA256SUM  pypy.tar.bz2" | sha256sum -c \
+	&& tar -xjC /usr/local --strip-components=1 -f pypy.tar.bz2 \
+	&& rm pypy.tar.bz2 \
 	\
 		&& wget -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
 		&& pypy /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \

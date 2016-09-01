@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/*
 
 ENV PYPY_VERSION 5.2.0-alpha1
+ENV PYPY_SHA256SUM f5e66ab24267d6ddf662d07c512d06c10ebc732ae62093dabbd775ac63b9060a
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 8.1.2
@@ -26,8 +27,10 @@ RUN set -ex \
 	' \
 	&& apt-get update && apt-get install -y $fetchDeps --no-install-recommends && rm -rf /var/lib/apt/lists/* \
 	\
-	&& wget -O- "https://bitbucket.org/pypy/pypy/downloads/pypy3.3-v${PYPY_VERSION}-linux64.tar.bz2" \
-		| tar -xjC /usr/local --strip-components=1 \
+	&& wget -O pypy.tar.bz2 "https://bitbucket.org/pypy/pypy/downloads/pypy3.3-v${PYPY_VERSION}-linux64.tar.bz2" \
+	&& echo "$PYPY_SHA256SUM  pypy.tar.bz2" | sha256sum -c \
+	&& tar -xjC /usr/local --strip-components=1 -f pypy.tar.bz2 \
+	&& rm pypy.tar.bz2 \
 	\
 # explicit path to "pip3" to ensure distribution-provided "pip3" cannot interfere
 	&& if [ ! -e /usr/local/bin/pip3 ]; then : \
