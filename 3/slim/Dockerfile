@@ -18,9 +18,14 @@ ENV PYPY_VERSION 5.2.0-alpha1
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 8.1.2
 
-RUN set -x \
-	&& apt-get update && apt-get install -y bzip2 curl wget --no-install-recommends && rm -rf /var/lib/apt/lists/* \
-	&& curl -SL "https://bitbucket.org/pypy/pypy/downloads/pypy3.3-v${PYPY_VERSION}-linux64.tar.bz2" \
+RUN set -ex \
+	&& fetchDeps=' \
+		bzip2 \
+		wget \
+	' \
+	&& apt-get update && apt-get install -y $fetchDeps --no-install-recommends && rm -rf /var/lib/apt/lists/* \
+	\
+	&& wget -O- "https://bitbucket.org/pypy/pypy/downloads/pypy3.3-v${PYPY_VERSION}-linux64.tar.bz2" \
 		| tar -xjC /usr/local --strip-components=1 \
 	\
 # explicit path to "pip3" to ensure distribution-provided "pip3" cannot interfere
@@ -37,7 +42,7 @@ RUN set -x \
 # https://github.com/docker-library/python/pull/100
 	&& [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ] \
 	\
-	&& apt-get purge -y --auto-remove bzip2 curl wget \
+	&& apt-get purge -y --auto-remove $fetchDeps \
 	&& rm -rf ~/.cache
 
 CMD ["pypy3"]

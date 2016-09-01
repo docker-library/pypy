@@ -12,8 +12,8 @@ ENV PYPY_VERSION 5.2.0-alpha1
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 8.1.2
 
-RUN set -x \
-	&& curl -SL "https://bitbucket.org/pypy/pypy/downloads/pypy3.3-v${PYPY_VERSION}-linux64.tar.bz2" \
+RUN set -ex \
+	&& wget -O- "https://bitbucket.org/pypy/pypy/downloads/pypy3.3-v${PYPY_VERSION}-linux64.tar.bz2" \
 		| tar -xjC /usr/local --strip-components=1 \
 	\
 # explicit path to "pip3" to ensure distribution-provided "pip3" cannot interfere
