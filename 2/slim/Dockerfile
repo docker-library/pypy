@@ -14,8 +14,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		libsqlite3-0 \
 	&& rm -rf /var/lib/apt/lists/*
 
-ENV PYPY_VERSION 5.4.0
-ENV PYPY_SHA256SUM bdfea513d59dcd580970cb6f79f3a250d00191fd46b68133d5327e924ca845f8
+ENV PYPY_VERSION 5.4.1
+ENV PYPY_SHA256SUM 9c85319778224d7fb0c348f55fe3fada15bb579c5f3870a13ad63b42a737dd72
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 8.1.2
