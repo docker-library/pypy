@@ -18,7 +18,7 @@ ENV PYPY_VERSION 5.4.1
 ENV PYPY_SHA256SUM 9c85319778224d7fb0c348f55fe3fada15bb579c5f3870a13ad63b42a737dd72
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 8.1.2
+ENV PYTHON_PIP_VERSION 9.0.0
 
 RUN set -ex \
 	&& fetchDeps=' \
