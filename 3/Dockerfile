@@ -17,7 +17,7 @@ ENV PYPY_VERSION 5.5.0-alpha
 ENV PYPY_SHA256SUM 41ef7c25fd04eeb20deaa83c5d88c10aef2bbc8bcfd9e53e7cc61136220861cc
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 9.0.0
+ENV PYTHON_PIP_VERSION 9.0.1
 
 RUN set -ex \
 	&& wget -O pypy.tar.bz2 "https://bitbucket.org/pypy/pypy/downloads/pypy3.3-v${PYPY_VERSION}-linux64.tar.bz2" \
