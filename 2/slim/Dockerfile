@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		ca-certificates \
 		libexpat1 \
 		libffi6 \
+		libgdbm3 \
 		libsqlite3-0 \
 	&& rm -rf /var/lib/apt/lists/*
 
