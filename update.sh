@@ -19,7 +19,7 @@ for version in "${versions[@]}"; do
 	esac
 	# <td class="name"><a class="execute" href="/pypy/pypy/downloads/pypy-2.4.0-linux64.tar.bz2">pypy-2.4.0-linux64.tar.bz2</a></td>
 	# <td class="name"><a class="execute" href="/pypy/pypy/downloads/pypy3-2.4.0-linux64.tar.bz2">pypy3-2.4.0-linux64.tar.bz2</a></td>
-	fullVersion="$(curl -sSL 'https://bitbucket.org/pypy/pypy/downloads' | grep -E "$pypy"'-v([0-9.]+(-alpha[0-9]*)?)-linux64.tar.bz2' | sed -r 's/^.*'"$pypy"'-v([0-9.]+(-alpha[0-9]*)?)-linux64.tar.bz2.*$/\1/' | sort -V | tail -1)"
+	fullVersion="$(curl -sSL 'https://bitbucket.org/pypy/pypy/downloads/' | grep -E "$pypy"'-v([0-9.]+(-alpha[0-9]*)?)-linux64.tar.bz2' | sed -r 's/^.*'"$pypy"'-v([0-9.]+(-alpha[0-9]*)?)-linux64.tar.bz2.*$/\1/' | sort -V | tail -1)"
 
 	# <p>pypy2.7-5.4.0 sha256:</p>
 	# <pre class="literal-block">
