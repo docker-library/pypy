@@ -13,7 +13,7 @@ pipVersion="$(curl -sSL 'https://pypi.python.org/pypi/pip/json' | awk -F '"' '$2
 
 for version in "${versions[@]}"; do
 	case "$version" in
-		3) pypy="pypy3.3" ;;
+		3) pypy="pypy3" ;;
 		2) pypy='pypy2' ;;
 		*) echo >&2 "error: unknown pypy variant $version"; exit 1 ;;
 	esac
