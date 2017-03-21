@@ -15,8 +15,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		libsqlite3-0 \
 	&& rm -rf /var/lib/apt/lists/*
 
-ENV PYPY_VERSION 5.5.0-alpha
-ENV PYPY_SHA256SUM 41ef7c25fd04eeb20deaa83c5d88c10aef2bbc8bcfd9e53e7cc61136220861cc
+ENV PYPY_VERSION 5.7.0
+ENV PYPY_SHA256SUM 921894884a647220a712ecdaad516d9c22fbadf3b4bb3a5db8f3635c60eabc7b
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 9.0.1
@@ -28,7 +28,7 @@ RUN set -ex \
 	' \
 	&& apt-get update && apt-get install -y $fetchDeps --no-install-recommends && rm -rf /var/lib/apt/lists/* \
 	\
-	&& wget -O pypy.tar.bz2 "https://bitbucket.org/pypy/pypy/downloads/pypy3.3-v${PYPY_VERSION}-linux64.tar.bz2" \
+	&& wget -O pypy.tar.bz2 "https://bitbucket.org/pypy/pypy/downloads/pypy3-v${PYPY_VERSION}-linux64.tar.bz2" \
 	&& echo "$PYPY_SHA256SUM  pypy.tar.bz2" | sha256sum -c \
 	&& tar -xjC /usr/local --strip-components=1 -f pypy.tar.bz2 \
 	&& rm pypy.tar.bz2 \
