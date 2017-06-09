@@ -13,8 +13,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		tk \
 	&& rm -rf /var/lib/apt/lists/*
 
-ENV PYPY_VERSION 5.7.1
-ENV PYPY_SHA256SUM c4fa3da42156bed4a9d912433b618a141e0c5161d7cc8c328786736ea5d1c2da
+ENV PYPY_VERSION 5.8.0
+ENV PYPY_SHA256SUM 6274292d0e954a2609b15978cde6efa30942ba20aa5d2acbbf1c70c0a54e9b1e
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 9.0.1
