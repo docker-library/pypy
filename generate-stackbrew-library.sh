@@ -1,5 +1,5 @@
-#!/bin/bash
-set -eu
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
 declare -A aliases=(
 	[3]='latest'
@@ -7,6 +7,8 @@ declare -A aliases=(
 
 self="$(basename "$BASH_SOURCE")"
 cd "$(dirname "$(readlink -f "$BASH_SOURCE")")"
+
+source '.architectures-lib'
 
 versions=( */ )
 versions=( "${versions[@]%/}" )
@@ -61,26 +63,29 @@ for version in "${versions[@]}"; do
 	done
 	versionAliases+=( $version ${aliases[$version]:-} )
 
-	echo
-	cat <<-EOE
-		Tags: $(join ', ' "${versionAliases[@]}")
-		GitCommit: $commit
-		Directory: $version
-	EOE
+	for variant in '' slim onbuild; do
+		dir="$version${variant:+/$variant}"
+		[ -f "$dir/Dockerfile" ] || continue
 
-	for variant in slim onbuild; do
-		[ -f "$version/$variant/Dockerfile" ] || continue
+		commit="$(dirCommit "$dir")"
 
-		commit="$(dirCommit "$version/$variant")"
+		variantAliases=( "${versionAliases[@]}" )
+		if [ -n "$variant" ]; then
+			variantAliases=( "${variantAliases[@]/%/-$variant}" )
+			variantAliases=( "${variantAliases[@]//latest-/}" )
+		fi
 
-		variantAliases=( "${versionAliases[@]/%/-$variant}" )
-		variantAliases=( "${variantAliases[@]//latest-/}" )
+		case "$variant" in
+			onbuild) variantArches="$(parentArches "$(dirname "$dir")" )" ;;
+			*)       variantArches="$(parentArches "$dir")" ;;
+		esac
 
 		echo
 		cat <<-EOE
 			Tags: $(join ', ' "${variantAliases[@]}")
+			Architectures: $(join ', ' $variantArches)
 			GitCommit: $commit
-			Directory: $version/$variant
+			Directory: $dir
 		EOE
 	done
 done

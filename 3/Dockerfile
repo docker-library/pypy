@@ -14,16 +14,26 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/*
 
 ENV PYPY_VERSION 5.8.0
-ENV PYPY_SHA256SUM 57d871a7f1135719c138cee4e3533c3275d682a76a40ff668e95150c65923035
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 9.0.1
 
 RUN set -ex; \
-	wget -O pypy.tar.bz2 "https://bitbucket.org/pypy/pypy/downloads/pypy3-v${PYPY_VERSION}-linux64.tar.bz2"; \
-	echo "$PYPY_SHA256SUM *pypy.tar.bz2" | sha256sum -c; \
+	\
+# this "case" statement is generated via "update.sh"
+	dpkgArch="$(dpkg --print-architecture)"; \
+	case "${dpkgArch##*-}" in \
+# amd64
+		amd64) pypyArch='linux64'; sha256='57d871a7f1135719c138cee4e3533c3275d682a76a40ff668e95150c65923035' ;; \
+		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
+	esac; \
+	\
+	wget -O pypy.tar.bz2 "https://bitbucket.org/pypy/pypy/downloads/pypy3-v${PYPY_VERSION}-${pypyArch}.tar.bz2"; \
+	echo "$sha256 *pypy.tar.bz2" | sha256sum -c; \
 	tar -xjC /usr/local --strip-components=1 -f pypy.tar.bz2; \
-	rm pypy.tar.bz2
+	rm pypy.tar.bz2; \
+	\
+	pypy3 --version
 
 RUN set -ex; \
 	\
