@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		tk \
 	&& rm -rf /var/lib/apt/lists/*
 
-ENV PYPY_VERSION 5.8.0
+ENV PYPY_VERSION 5.9.0
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 9.0.1
@@ -24,7 +24,7 @@ RUN set -ex; \
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
 # amd64
-		amd64) pypyArch='linux64'; sha256='57d871a7f1135719c138cee4e3533c3275d682a76a40ff668e95150c65923035' ;; \
+		amd64) pypyArch='linux64'; sha256='d8c41ede3758127718944cc2fd6bf78ed4303d946f85596cac91281ccce36165' ;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
 	\
