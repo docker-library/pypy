@@ -51,4 +51,7 @@ RUN set -ex; \
 	\
 	apt-get purge -y --auto-remove $fetchDeps
 
+# TODO: Do we want to apt-get instsall -y pkg-config in slim?
+COPY pypy%%VERSION%%.pc /usr/share/pkgconfig
+
 CMD ["%%CMD%%"]

@@ -56,4 +56,6 @@ RUN set -ex; \
 	\
 	apt-get purge -y --auto-remove $fetchDeps
 
+COPY pypy3 /usr/share/pkgconfig
+
 CMD ["pypy3"]

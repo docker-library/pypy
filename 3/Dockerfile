@@ -48,4 +48,6 @@ RUN set -ex; \
 	\
 	rm -f get-pip.py
 
+COPY pypy3 /usr/share/pkgconfig
+
 CMD ["pypy3"]

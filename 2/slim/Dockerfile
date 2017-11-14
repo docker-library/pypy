@@ -62,4 +62,6 @@ RUN set -ex; \
 	\
 	apt-get purge -y --auto-remove $fetchDeps
 
+COPY pypy2.pc /usr/share/pkgconfig
+
 CMD ["pypy"]

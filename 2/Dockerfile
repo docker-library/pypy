@@ -54,4 +54,6 @@ RUN set -ex; \
 	\
 	rm -f get-pip.py
 
+COPY pypy2.pc /usr/share/pkgconfig
+
 CMD ["pypy"]

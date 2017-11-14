@@ -43,4 +43,7 @@ RUN set -ex; \
 	\
 	rm -f get-pip.py
 
+# TODO: Should we apt-get install -y pkg-config?
+COPY pypy%%VERSION%%.pc /usr/share/pkgconfig
+
 CMD ["%%CMD%%"]
