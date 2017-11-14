@@ -89,10 +89,15 @@ for version in "${versions[@]}"; do
 	for variant in '' slim; do
 		sed -r \
 			-e 's!%%PYPY_VERSION%%!'"$fullVersion"'!g' \
+			-e 's!%%VERSION%%!'"${version}"'!g' \
 			-e 's!%%TAR%%!'"$pypy"'!g' \
 			-e 's!%%CMD%%!'"$cmd"'!g' \
 			-e 's!%%ARCH-CASE%%!'"$(sed_escape_rhs "$linuxArchCase")"'!g' \
 			"Dockerfile${variant:+-$variant}.template" > "$version/$variant/Dockerfile"
+
+
+		sed -r -e 's!%%PYPY_VERSION%%!'"$fullVersion"'!g' "pypy${version}".pc > \
+		    "${version}/${variant}/pypy${version}.pc"
 	done
 
 	sed -ri 's/^(FROM pypy):.*/\1:'"$version"'/' "$version/onbuild/Dockerfile"
