@@ -63,7 +63,7 @@ for version in "${versions[@]}"; do
 	done
 	versionAliases+=( $version ${aliases[$version]:-} )
 
-	for variant in '' slim onbuild; do
+	for variant in '' slim; do
 		dir="$version${variant:+/$variant}"
 		[ -f "$dir/Dockerfile" ] || continue
 
@@ -75,10 +75,7 @@ for version in "${versions[@]}"; do
 			variantAliases=( "${variantAliases[@]//latest-/}" )
 		fi
 
-		case "$variant" in
-			onbuild) variantArches="$(parentArches "$(dirname "$dir")" )" ;;
-			*)       variantArches="$(parentArches "$dir")" ;;
-		esac
+		variantArches="$(parentArches "$dir")"
 
 		echo
 		cat <<-EOE
