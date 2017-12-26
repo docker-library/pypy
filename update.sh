@@ -94,6 +94,4 @@ for version in "${versions[@]}"; do
 			-e 's!%%ARCH-CASE%%!'"$(sed_escape_rhs "$linuxArchCase")"'!g' \
 			"Dockerfile${variant:+-$variant}.template" > "$version/$variant/Dockerfile"
 	done
-
-	sed -ri 's/^(FROM pypy):.*/\1:'"$version"'/' "$version/onbuild/Dockerfile"
 done
