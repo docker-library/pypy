@@ -13,7 +13,7 @@ versions=( "${versions[@]%/}" )
 
 pipVersion="$(curl -fsSL 'https://pypi.org/pypi/pip/json' | jq -r .info.version)"
 
-sha256s="$(curl -fsSL 'http://pypy.org/download.html')"
+sha256s="$(curl -fsSL 'https://pypy.org/download.html')"
 scrapeSha256() {
 	local pypy="$1"; shift
 	local fullVersion="$1"; shift
