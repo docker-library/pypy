@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		tk \
 	&& rm -rf /var/lib/apt/lists/*
 
-ENV PYPY_VERSION 5.10.0
+ENV PYPY_VERSION 5.10.1
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 9.0.1
@@ -24,11 +24,11 @@ RUN set -ex; \
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
 # amd64
-		amd64) pypyArch='linux64'; sha256='aa4fb52fb858d973dd838dcf8d74f30705e5afdf1150acb8e056eb99353dfe77' ;; \
+		amd64) pypyArch='linux64'; sha256='75a276e1ee1863967bbacb70c5bff636de200768c0ec90e72f7ec17aace0aefe' ;; \
 # arm32v5
-		armel) pypyArch='linux-armel'; sha256='c2cc529befb3e1f2ef8bd4e96af4a823c52ef2d180b0b3bd87511c5b47d59210' ;; \
+		armel) pypyArch='linux-armel'; sha256='5065e9ad958d06b9612ba974f43997d20168d4245c054dd43270e4b458782282' ;; \
 # i386
-		i386) pypyArch='linux32'; sha256='529bc3b11edbdcdd676d90c805b8f607f6eedd5f0ec457a31bbe09c03f5bebfe' ;; \
+		i386) pypyArch='linux32'; sha256='a6ceca9ee5dc511de7902164464b88311fec9366c5673d0c00528eda862bbe54' ;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
 	\
