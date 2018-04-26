@@ -89,6 +89,7 @@ for version in "${versions[@]}"; do
 	for variant in '' slim; do
 		sed -r \
 			-e 's!%%PYPY_VERSION%%!'"$fullVersion"'!g' \
+			-e 's!%%PIP_VERSION%%!'"$pipVersion"'!g' \
 			-e 's!%%TAR%%!'"$pypy"'!g' \
 			-e 's!%%CMD%%!'"$cmd"'!g' \
 			-e 's!%%ARCH-CASE%%!'"$(sed_escape_rhs "$linuxArchCase")"'!g' \
