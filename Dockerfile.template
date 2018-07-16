@@ -1,6 +1,6 @@
 FROM buildpack-deps:jessie
 
-# ensure local pypy is preferred over distribution python
+# ensure local pypy is preferred over distribution pypy
 ENV PATH /usr/local/bin:$PATH
 
 # http://bugs.python.org/issue19846
