@@ -41,10 +41,18 @@ hasBashbrewArch() {
 	grep -qE "^# ${bashbrewArch}\$" "$dir/Dockerfile"
 }
 
-parentArches() {
+parent() {
 	local dir="$1"; shift # "2", "3/slim", etc
 
 	local parent="$(awk 'toupper($1) == "FROM" { print $2 }' "$dir/Dockerfile")"
+
+	echo "$parent"
+}
+
+parentArches() {
+	local dir="$1"; shift # "2", "3/slim", etc
+	local parent="$1"; shift # "buildpack-deps:jessie", etc
+
 	local parentArches="${parentRepoToArches[$parent]:-}"
 
 	local arches=()

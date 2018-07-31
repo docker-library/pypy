@@ -75,7 +75,16 @@ for version in "${versions[@]}"; do
 			variantAliases=( "${variantAliases[@]//latest-/}" )
 		fi
 
-		variantArches="$(parentArches "$dir")"
+		variantParent="$(parent "$dir")"
+
+		suite="${variantParent#*:}" # "jessie-slim", "stretch"
+		suite="${suite%-slim}" # "jessie", "stretch"
+
+		suiteAliases=( "${variantAliases[@]/%/-$suite}" )
+		suiteAliases=( "${suiteAliases[@]//latest-/}" )
+		variantAliases+=( "${suiteAliases[@]}" )
+
+		variantArches="$(parentArches "$dir" "$variantParent")"
 
 		echo
 		cat <<-EOE
