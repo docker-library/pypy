@@ -1,4 +1,4 @@
-FROM buildpack-deps:jessie
+FROM debian:jessie-slim
 
 # ensure local pypy is preferred over distribution pypy
 ENV PATH /usr/local/bin:$PATH
@@ -7,13 +7,15 @@ ENV PATH /usr/local/bin:$PATH
 # > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
 ENV LANG C.UTF-8
 
-# runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-		tcl \
-		tk \
+		ca-certificates \
+		libexpat1 \
+		libffi6 \
+		libgdbm3 \
+		libsqlite3-0 \
 	&& rm -rf /var/lib/apt/lists/*
 
-ENV PYPY_VERSION 6.0.0
+ENV PYPY_VERSION 7.0.0
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 19.0.2
@@ -24,23 +26,28 @@ RUN set -ex; \
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
 # amd64
-		amd64) pypyArch='linux64'; sha256='4cfffa292b9ef34bb6ba39cdbaa196c5c5cbbc5aa3faaa157cf45d7e34027048' ;; \
-# arm32v5
-		armel) pypyArch='linux-armel'; sha256='6a6888a55192f58594838b8b3d2e7daaad43d3bf4293afab3dd8987d0bbd1124' ;; \
+		amd64) pypyArch='linux64'; sha256='729e3c54325969c98bd3658c6342b9f5987b96bad1d6def04250a08401b54c4b' ;; \
 # i386
-		i386) pypyArch='linux32'; sha256='b04eeee5160e6cb5f8962de80f077ea1dc7be34e77d74bf075519c23603f5ff9' ;; \
+		i386) pypyArch='linux32'; sha256='b8db8fbca9621de8ea8cd7184b322f2dddb2f385e8e5a63dfb75bb3fea4b2e3f' ;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
 	\
-	wget -O pypy.tar.bz2 "https://bitbucket.org/pypy/pypy/downloads/pypy3-v${PYPY_VERSION}-${pypyArch}.tar.bz2"; \
+	savedAptMark="$(apt-mark showmanual)"; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		bzip2 \
+		wget \
+	; \
+	rm -rf /var/lib/apt/lists/*; \
+	\
+	wget -O pypy.tar.bz2 "https://bitbucket.org/pypy/pypy/downloads/pypy3.5-v${PYPY_VERSION}-${pypyArch}.tar.bz2"; \
 	echo "$sha256 *pypy.tar.bz2" | sha256sum -c; \
 	tar -xjC /usr/local --strip-components=1 -f pypy.tar.bz2; \
 	find /usr/local/lib-python -depth -type d -a \( -name test -o -name tests \) -exec rm -rf '{}' +; \
 	rm pypy.tar.bz2; \
 	\
-	pypy3 --version
-
-RUN set -ex; \
+# smoke test
+	pypy3 --version; \
 	\
 	wget -O get-pip.py 'https://bootstrap.pypa.io/get-pip.py'; \
 	\
@@ -49,8 +56,16 @@ RUN set -ex; \
 		--no-cache-dir \
 		"pip==$PYTHON_PIP_VERSION" \
 	; \
+# smoke test
 	pip --version; \
 	\
-	rm -f get-pip.py
+	rm -f get-pip.py; \
+	\
+	apt-mark auto '.*' > /dev/null; \
+	[ -z "$savedAptMark" ] || apt-mark manual $savedAptMark > /dev/null; \
+	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+# smoke test again, to be sure
+	pypy3 --version; \
+	pip --version
 
 CMD ["pypy3"]

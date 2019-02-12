@@ -35,12 +35,14 @@ sed_escape_rhs() {
 	echo "$@" | sed -e 's/[\/&]/\\&/g' | sed -e ':a;N;$!ba;s/\n/\\n/g'
 }
 
+travisEnv=
 for version in "${versions[@]}"; do
 	case "$version" in
-		3) pypy='pypy3'; cmd='pypy3' ;;
-		2) pypy='pypy2'; cmd='pypy' ;;
+		3 | 3.*) cmd='pypy3' ;;
+		2 | 2.*) cmd='pypy' ;;
 		*) echo >&2 "error: unknown pypy variant $version"; exit 1 ;;
 	esac
+	pypy="pypy$version"
 
 	# <td class="name"><a class="execute" href="/pypy/pypy/downloads/pypy-2.4.0-linux64.tar.bz2">pypy-2.4.0-linux64.tar.bz2</a></td>
 	# <td class="name"><a class="execute" href="/pypy/pypy/downloads/pypy3-2.4.0-linux64.tar.bz2">pypy3-2.4.0-linux64.tar.bz2</a></td>
@@ -86,7 +88,7 @@ for version in "${versions[@]}"; do
 	linuxArchCase+=$'\t\t''*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; '$'\\\n'
 	linuxArchCase+=$'\t''esac'
 
-	for variant in '' slim; do
+	for variant in slim ''; do
 		sed -r \
 			-e 's!%%PYPY_VERSION%%!'"$fullVersion"'!g' \
 			-e 's!%%PIP_VERSION%%!'"$pipVersion"'!g' \
@@ -94,5 +96,9 @@ for version in "${versions[@]}"; do
 			-e 's!%%CMD%%!'"$cmd"'!g' \
 			-e 's!%%ARCH-CASE%%!'"$(sed_escape_rhs "$linuxArchCase")"'!g' \
 			"Dockerfile${variant:+-$variant}.template" > "$version/$variant/Dockerfile"
+		travisEnv='\n  - VERSION='"$version VARIANT=$variant$travisEnv"
 	done
 done
+
+travis="$(awk -v 'RS=\n\n' '$1 == "env:" { $0 = "env:'"$travisEnv"'" } { printf "%s%s", $0, RS }' .travis.yml)"
+echo "$travis" > .travis.yml
