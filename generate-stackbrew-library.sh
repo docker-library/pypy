@@ -2,7 +2,8 @@
 set -Eeuo pipefail
 
 declare -A aliases=(
-	[3]='latest'
+	[3.5]='3'
+	[2.7]='2'
 )
 
 self="$(basename "$BASH_SOURCE")"
@@ -54,14 +55,25 @@ for version in "${versions[@]}"; do
 	commit="$(dirCommit "$version")"
 
 	fullVersion="$(git show "$commit":"$version/Dockerfile" | awk '$1 == "ENV" && $2 == "PYPY_VERSION" { print $3; exit }')"
-	fullVersion="$version-$fullVersion"
+	#fullVersion="$version-$fullVersion"
 
-	versionAliases=()
-	while [ "$fullVersion" != "$version" -a "${fullVersion%[.-]*}" != "$fullVersion" ]; do
-		versionAliases+=( $fullVersion )
+	pypyVersionAliases=()
+	while [ "${fullVersion%[.-]*}" != "$fullVersion" ]; do
+		pypyVersionAliases+=( $fullVersion )
 		fullVersion="${fullVersion%[.-]*}"
 	done
-	versionAliases+=( $version ${aliases[$version]:-} )
+	pypyVersionAliases+=( $fullVersion latest )
+
+	versionAliases=()
+	for va in "$version" ${aliases[$version]:-}; do
+		versionAliases+=( "${pypyVersionAliases[@]/#/$va-}" )
+		versionAliases=( "${versionAliases[@]//-latest}" )
+		versionAliases=( "${versionAliases[@]//latest-}" )
+		if [ "$va" = '3' ]; then
+			# whichever release gets the coveted "pypy:3" alias gets "pypy:latest" too
+			versionAliases+=( latest )
+		fi
+	done
 
 	for variant in '' slim; do
 		dir="$version${variant:+/$variant}"
