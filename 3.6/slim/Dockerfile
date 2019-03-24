@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		libsqlite3-0 \
 	&& rm -rf /var/lib/apt/lists/*
 
-ENV PYPY_VERSION 7.0.0
+ENV PYPY_VERSION 7.1.0
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 19.0.3
@@ -26,7 +26,9 @@ RUN set -ex; \
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
 # amd64
-		amd64) pypyArch='linux64'; sha256='8576bde0760c239040706cf4952995eb0e77938b175885392a465a0d1616173d' ;; \
+		amd64) pypyArch='linux64'; sha256='853ab874ae3b1f929576890c511f3efbc9159c2a16332113e68be7dccc51e2aa' ;; \
+# i386
+		i386) pypyArch='linux32'; sha256='6e1fd6a820c8ba850761b052a1e53c2138d2a46d221202dd010815d7c9723269' ;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
 	\
