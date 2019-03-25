@@ -24,9 +24,9 @@ RUN set -ex; \
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
 # amd64
-		amd64) pypyArch='linux64'; sha256='853ab874ae3b1f929576890c511f3efbc9159c2a16332113e68be7dccc51e2aa' ;; \
+		amd64) pypyArch='linux64'; sha256='270dd06633cf03337e6f815d7235e790e90dabba6f4b6345c9745121006925fc' ;; \
 # i386
-		i386) pypyArch='linux32'; sha256='6e1fd6a820c8ba850761b052a1e53c2138d2a46d221202dd010815d7c9723269' ;; \
+		i386) pypyArch='linux32'; sha256='031bfac61210a6e161bace0691b854dc15d01b0e624dc0588c544ee5e1621a83' ;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
 	\
