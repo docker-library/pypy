@@ -38,8 +38,8 @@ sed_escape_rhs() {
 travisEnv=
 for version in "${versions[@]}"; do
 	case "$version" in
-		3 | 3.*) cmd='pypy3' ;;
-		2 | 2.*) cmd='pypy' ;;
+		3 | 3.*) cmd='pypy3'; base='stretch' ;;
+		2 | 2.*) cmd='pypy'; base='jessie' ;; # https://github.com/docker-library/pypy/issues/24#issuecomment-476873691
 		*) echo >&2 "error: unknown pypy variant $version"; exit 1 ;;
 	esac
 	pypy="pypy$version"
@@ -94,6 +94,7 @@ for version in "${versions[@]}"; do
 			-e 's!%%PIP_VERSION%%!'"$pipVersion"'!g' \
 			-e 's!%%TAR%%!'"$pypy"'!g' \
 			-e 's!%%CMD%%!'"$cmd"'!g' \
+			-e 's!%%BASE%%!'"$base"'!g' \
 			-e 's!%%ARCH-CASE%%!'"$(sed_escape_rhs "$linuxArchCase")"'!g' \
 			"Dockerfile${variant:+-$variant}.template" > "$version/$variant/Dockerfile"
 		travisEnv='\n  - VERSION='"$version VARIANT=$variant$travisEnv"

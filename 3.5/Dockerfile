@@ -1,4 +1,4 @@
-FROM buildpack-deps:jessie
+FROM buildpack-deps:stretch
 
 # ensure local pypy is preferred over distribution pypy
 ENV PATH /usr/local/bin:$PATH
@@ -30,14 +30,21 @@ RUN set -ex; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
 	\
-	wget -O pypy.tar.bz2 "https://bitbucket.org/pypy/pypy/downloads/pypy3.5-v${PYPY_VERSION}-${pypyArch}.tar.bz2"; \
+	wget -O pypy.tar.bz2 "https://bitbucket.org/pypy/pypy/downloads/pypy3.5-v${PYPY_VERSION}-${pypyArch}.tar.bz2" --progress=dot:giga; \
 	echo "$sha256 *pypy.tar.bz2" | sha256sum -c; \
 	tar -xjC /usr/local --strip-components=1 -f pypy.tar.bz2; \
 	find /usr/local/lib-python -depth -type d -a \( -name test -o -name tests \) -exec rm -rf '{}' +; \
 	rm pypy.tar.bz2; \
 	\
 # smoke test
-	pypy3 --version
+	pypy3 --version; \
+	\
+	if [ -f /usr/local/lib_pypy/_ssl_build.py ]; then \
+# on pypy3, rebuild ffi bits for compatibility with Debian Stretch+ (https://github.com/docker-library/pypy/issues/24#issuecomment-409408657)
+		cd /usr/local/lib_pypy; \
+		pypy3 _ssl_build.py; \
+# TODO rebuild other cffi modules here too? (other _*_build.py files)
+	fi
 
 RUN set -ex; \
 	\

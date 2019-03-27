@@ -1,4 +1,4 @@
-FROM debian:jessie-slim
+FROM debian:stretch-slim
 
 # ensure local pypy is preferred over distribution pypy
 ENV PATH /usr/local/bin:$PATH
@@ -38,9 +38,8 @@ RUN set -ex; \
 		bzip2 \
 		wget \
 	; \
-	rm -rf /var/lib/apt/lists/*; \
 	\
-	wget -O pypy.tar.bz2 "https://bitbucket.org/pypy/pypy/downloads/pypy3.6-v${PYPY_VERSION}-${pypyArch}.tar.bz2"; \
+	wget -O pypy.tar.bz2 "https://bitbucket.org/pypy/pypy/downloads/pypy3.6-v${PYPY_VERSION}-${pypyArch}.tar.bz2" --progress=dot:giga; \
 	echo "$sha256 *pypy.tar.bz2" | sha256sum -c; \
 	tar -xjC /usr/local --strip-components=1 -f pypy.tar.bz2; \
 	find /usr/local/lib-python -depth -type d -a \( -name test -o -name tests \) -exec rm -rf '{}' +; \
@@ -48,6 +47,14 @@ RUN set -ex; \
 	\
 # smoke test
 	pypy3 --version; \
+	\
+	if [ -f /usr/local/lib_pypy/_ssl_build.py ]; then \
+# on pypy3, rebuild ffi bits for compatibility with Debian Stretch+ (https://github.com/docker-library/pypy/issues/24#issuecomment-409408657)
+		apt-get install -y --no-install-recommends gcc libc6-dev libssl-dev; \
+		cd /usr/local/lib_pypy; \
+		pypy3 _ssl_build.py; \
+# TODO rebuild other cffi modules here too? (other _*_build.py files)
+	fi; \
 	\
 	wget -O get-pip.py 'https://bootstrap.pypa.io/get-pip.py'; \
 	\
@@ -65,6 +72,7 @@ RUN set -ex; \
 	[ -z "$savedAptMark" ] || apt-mark manual $savedAptMark > /dev/null; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 # smoke test again, to be sure
+	rm -rf /var/lib/apt/lists/*; \
 	pypy3 --version; \
 	pip --version
 
