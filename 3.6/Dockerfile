@@ -27,6 +27,8 @@ RUN set -ex; \
 		amd64) pypyArch='linux64'; sha256='270dd06633cf03337e6f815d7235e790e90dabba6f4b6345c9745121006925fc' ;; \
 # i386
 		i386) pypyArch='linux32'; sha256='031bfac61210a6e161bace0691b854dc15d01b0e624dc0588c544ee5e1621a83' ;; \
+# s390x
+		s390x) pypyArch='s390x'; sha256='243cd0cc188a94c1f064f402ae72b8ba4303eb3137eac53c53826472b8005098' ;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
 	\

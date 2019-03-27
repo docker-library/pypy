@@ -7,8 +7,6 @@ arm32v5 armel   linux-armel
 arm32v7 armhf   linux-armhf-raring
 i386    i386    linux32
 
-# pypy: error while loading shared libraries: libssl.so.10: cannot open shared object file: No such file or directory
-#ppc64le ppc64el ppc64le
-# pypy: error while loading shared libraries: libssl.so.10: cannot open shared object file: No such file or directory
-#s390x   s390x   s390x
-# https://bitbucket.org/pypy/pypy/issues/2646/s390x-and-ppc64le-releases-link-to
+# see https://bitbucket.org/pypy/pypy/issues/2646 for some s390x/ppc64le caveats (mitigated in 3.x via https://github.com/docker-library/pypy/issues/24#issuecomment-476873691)
+ppc64le ppc64el ppc64le
+s390x   s390x   s390x

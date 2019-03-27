@@ -29,6 +29,8 @@ RUN set -ex; \
 		amd64) pypyArch='linux64'; sha256='270dd06633cf03337e6f815d7235e790e90dabba6f4b6345c9745121006925fc' ;; \
 # i386
 		i386) pypyArch='linux32'; sha256='031bfac61210a6e161bace0691b854dc15d01b0e624dc0588c544ee5e1621a83' ;; \
+# s390x
+		s390x) pypyArch='s390x'; sha256='243cd0cc188a94c1f064f402ae72b8ba4303eb3137eac53c53826472b8005098' ;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
 	\
@@ -45,6 +47,8 @@ RUN set -ex; \
 	find /usr/local/lib-python -depth -type d -a \( -name test -o -name tests \) -exec rm -rf '{}' +; \
 	rm pypy.tar.bz2; \
 	\
+# ppc64le and s390x link against libncurses.so.5 (https://bitbucket.org/pypy/pypy/issues/2646)
+	if ldd /usr/local/bin/pypy3 2>&1 | grep -q 'libncurses.so.5 => not found'; then apt-get install -y --no-install-recommends libncurses5; savedAptMark="$savedAptMark libncurses5"; fi; \
 # smoke test
 	pypy3 --version; \
 	\

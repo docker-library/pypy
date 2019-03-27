@@ -74,14 +74,23 @@ for version in "${versions[@]}"; do
 
 	linuxArchCase='dpkgArch="$(dpkg --print-architecture)"; '$'\\\n'
 	linuxArchCase+=$'\t''case "${dpkgArch##*-}" in '$'\\\n'
+	haveIBM=
 	for dpkgArch in $(dpkgArches); do
+		bashbrewArch="$(dpkgToBashbrewArch "$dpkgArch")"
+		case "$base/$bashbrewArch" in
+			jessie/s390x | jessie/ppc64le)
+				echo >&2 "warning: skipping $pypy on $bashbrewArch; https://bitbucket.org/pypy/pypy/issues/2646"
+				continue
+				;;
+
+			*/s390x | */ppc64le) haveIBM=1 ;;
+		esac
 		pypyArch="$(dpkgToPyPyArch "$dpkgArch")"
 		sha256="$(scrapeSha256 "$pypy" "$fullVersion" "$pypyArch")" || :
 		if [ -z "$sha256" ]; then
-			echo >&2 "warning: cannot find sha256 for $pypy-$fullVersion on arch $pypyArch ($dpkgArch); skipping it"
+			echo >&2 "warning: cannot find sha256 for $pypy-$fullVersion on arch $pypyArch ($bashbrewArch); skipping it"
 			continue
 		fi
-		bashbrewArch="$(dpkgToBashbrewArch "$dpkgArch")"
 		linuxArchCase+="# $bashbrewArch"$'\n'
 		linuxArchCase+=$'\t\t'"$dpkgArch) pypyArch='$pypyArch'; sha256='$sha256' ;; "$'\\\n'
 	done
@@ -99,6 +108,11 @@ for version in "${versions[@]}"; do
 			"Dockerfile${variant:+-$variant}.template" > "$version/$variant/Dockerfile"
 		travisEnv='\n  - VERSION='"$version VARIANT=$variant$travisEnv"
 	done
+
+	if [ -z "$haveIBM" ]; then
+		# no need for s390x/ppc64le libncurses hax
+		sed -i '/libncurses/d' "$version/slim/Dockerfile"
+	fi
 done
 
 travis="$(awk -v 'RS=\n\n' '$1 == "env:" { $0 = "env:'"$travisEnv"'" } { printf "%s%s", $0, RS }' .travis.yml)"

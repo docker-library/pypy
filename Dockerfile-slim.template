@@ -38,6 +38,8 @@ RUN set -ex; \
 	find /usr/local/lib-python -depth -type d -a \( -name test -o -name tests \) -exec rm -rf '{}' +; \
 	rm pypy.tar.bz2; \
 	\
+# ppc64le and s390x link against libncurses.so.5 (https://bitbucket.org/pypy/pypy/issues/2646)
+	if ldd /usr/local/bin/%%CMD%% 2>&1 | grep -q 'libncurses.so.5 => not found'; then apt-get install -y --no-install-recommends libncurses5; savedAptMark="$savedAptMark libncurses5"; fi; \
 # smoke test
 	%%CMD%% --version; \
 	\
