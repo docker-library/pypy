@@ -39,6 +39,8 @@ RUN set -ex; \
 	apt-get install -y --no-install-recommends \
 		bzip2 \
 		wget \
+# sometimes "pypy3" itself is linked against libncurses5, sometimes it's a ".so" file in "/usr/local/lib_pypy"
+		libncurses5 \
 	; \
 	\
 	wget -O pypy.tar.bz2 "https://bitbucket.org/pypy/pypy/downloads/pypy3.6-v${PYPY_VERSION}-${pypyArch}.tar.bz2" --progress=dot:giga; \
@@ -47,8 +49,6 @@ RUN set -ex; \
 	find /usr/local/lib-python -depth -type d -a \( -name test -o -name tests \) -exec rm -rf '{}' +; \
 	rm pypy.tar.bz2; \
 	\
-# ppc64le and s390x link against libncurses.so.5 (https://bitbucket.org/pypy/pypy/issues/2646)
-	if ldd /usr/local/bin/pypy3 2>&1 | grep -q 'libncurses.so.5 => not found'; then apt-get install -y --no-install-recommends libncurses5; savedAptMark="$savedAptMark libncurses5"; fi; \
 # smoke test
 	pypy3 --version; \
 	\
@@ -74,6 +74,14 @@ RUN set -ex; \
 	\
 	apt-mark auto '.*' > /dev/null; \
 	[ -z "$savedAptMark" ] || apt-mark manual $savedAptMark > /dev/null; \
+	find /usr/local -type f -executable -exec ldd '{}' ';' \
+		| awk '/=>/ { print $(NF-1) }' \
+		| sort -u \
+		| xargs -r dpkg-query --search \
+		| cut -d: -f1 \
+		| sort -u \
+		| xargs -r apt-mark manual \
+	; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 # smoke test again, to be sure
 	rm -rf /var/lib/apt/lists/*; \
