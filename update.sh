@@ -38,8 +38,8 @@ sed_escape_rhs() {
 travisEnv=
 for version in "${versions[@]}"; do
 	case "$version" in
-		3 | 3.*) cmd='pypy3' ;;
-		2 | 2.*) cmd='pypy' ;;
+		3 | 3.*) cmd='pypy3'; base='stretch' ;;
+		2 | 2.*) cmd='pypy'; base='jessie' ;; # https://github.com/docker-library/pypy/issues/24#issuecomment-476873691
 		*) echo >&2 "error: unknown pypy variant $version"; exit 1 ;;
 	esac
 	pypy="pypy$version"
@@ -75,13 +75,19 @@ for version in "${versions[@]}"; do
 	linuxArchCase='dpkgArch="$(dpkg --print-architecture)"; '$'\\\n'
 	linuxArchCase+=$'\t''case "${dpkgArch##*-}" in '$'\\\n'
 	for dpkgArch in $(dpkgArches); do
+		bashbrewArch="$(dpkgToBashbrewArch "$dpkgArch")"
+		case "$base/$bashbrewArch" in
+			jessie/s390x | jessie/ppc64le)
+				echo >&2 "warning: skipping $pypy on $bashbrewArch; https://bitbucket.org/pypy/pypy/issues/2646"
+				continue
+				;;
+		esac
 		pypyArch="$(dpkgToPyPyArch "$dpkgArch")"
 		sha256="$(scrapeSha256 "$pypy" "$fullVersion" "$pypyArch")" || :
 		if [ -z "$sha256" ]; then
-			echo >&2 "warning: cannot find sha256 for $pypy-$fullVersion on arch $pypyArch ($dpkgArch); skipping it"
+			echo >&2 "warning: cannot find sha256 for $pypy-$fullVersion on arch $pypyArch ($bashbrewArch); skipping it"
 			continue
 		fi
-		bashbrewArch="$(dpkgToBashbrewArch "$dpkgArch")"
 		linuxArchCase+="# $bashbrewArch"$'\n'
 		linuxArchCase+=$'\t\t'"$dpkgArch) pypyArch='$pypyArch'; sha256='$sha256' ;; "$'\\\n'
 	done
@@ -94,6 +100,7 @@ for version in "${versions[@]}"; do
 			-e 's!%%PIP_VERSION%%!'"$pipVersion"'!g' \
 			-e 's!%%TAR%%!'"$pypy"'!g' \
 			-e 's!%%CMD%%!'"$cmd"'!g' \
+			-e 's!%%BASE%%!'"$base"'!g' \
 			-e 's!%%ARCH-CASE%%!'"$(sed_escape_rhs "$linuxArchCase")"'!g' \
 			"Dockerfile${variant:+-$variant}.template" > "$version/$variant/Dockerfile"
 		travisEnv='\n  - VERSION='"$version VARIANT=$variant$travisEnv"
