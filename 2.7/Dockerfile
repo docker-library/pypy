@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		tk \
 	&& rm -rf /var/lib/apt/lists/*
 
-ENV PYPY_VERSION 7.1.0
+ENV PYPY_VERSION 7.1.1
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 19.0.3
@@ -24,9 +24,9 @@ RUN set -ex; \
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
 # amd64
-		amd64) pypyArch='linux64'; sha256='fef176a29a2ef068c00c8098e59dab935ca6e956f089672b3f7351da95a034f5' ;; \
+		amd64) pypyArch='linux64'; sha256='73b09ef0860eb9ad7997af3030b22909806a273d90786d78420926df53279d66' ;; \
 # i386
-		i386) pypyArch='linux32'; sha256='44ec91e8cb01caab289d8763c203f3aaf288d14325a6c42692bd1ac4e870d758' ;; \
+		i386) pypyArch='linux32'; sha256='41ca390a76ca0d47b8353a0d6a20d5aab5fad8b0bb647b960d8c33e873d18ef5' ;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
 	\
