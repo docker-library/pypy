@@ -70,6 +70,21 @@ for version in "${versions[@]}"; do
 		exit 1
 	fi
 
+	# if our current version is newer than the version we just scraped, this must be a fluke/flake (https://github.com/docker-library/official-images/pull/6163)
+	if currentVersion="$(awk '$1 == "ENV" && $2 == "PYPY_VERSION" { print $3; exit }' "$version/Dockerfile" 2>/dev/null)" && [ -n "$currentVersion" ] && [ "$currentVersion" != "$fullVersion" ]; then
+		newVersion="$(
+			{
+				echo "$fullVersion"
+				echo "$currentVersion"
+			} | sort -rV | head -1
+		)"
+		if [ "$newVersion" = "$currentVersion" ]; then
+			echo >&2 "error: scraped version ($fullVersion) is older than our current version ($currentVersion)!"
+			echo >&2 "  cowardly bailing to avoid unnecessary churn"
+			exit 1
+		fi
+	fi
+
 	echo "$version: $fullVersion"
 
 	linuxArchCase='dpkgArch="$(dpkg --print-architecture)"; '$'\\\n'
