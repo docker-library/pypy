@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV PYPY_VERSION 7.1.1
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 19.2.1
+ENV PYTHON_PIP_VERSION 19.2.2
 
 RUN set -ex; \
 	\
