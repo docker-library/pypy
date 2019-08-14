@@ -15,9 +15,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 ENV PYPY_VERSION 7.0.0
 
-# if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 19.2.2
-
 RUN set -ex; \
 	\
 # this "case" statement is generated via "update.sh"
@@ -48,11 +45,24 @@ RUN set -ex; \
 		cd /usr/local/lib_pypy; \
 		pypy3 _ssl_build.py; \
 # TODO rebuild other cffi modules here too? (other _*_build.py files)
-	fi
+	fi; \
+	find /usr/local -depth \
+		\( \
+			\( -type d -a \( -name test -o -name tests \) \) \
+			-o \
+			\( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
+		\) -exec rm -rf '{}' +
+
+# if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
+ENV PYTHON_PIP_VERSION 19.2.2
+# https://github.com/pypa/get-pip
+ENV PYTHON_GET_PIP_URL https://github.com/pypa/get-pip/raw/0c72a3b4ece313faccb446a96c84770ccedc5ec5/get-pip.py
+ENV PYTHON_GET_PIP_SHA256 201edc6df416da971e64cc94992d2dd24bc328bada7444f0c4f2031ae31e8dad
 
 RUN set -ex; \
 	\
-	wget -O get-pip.py 'https://bootstrap.pypa.io/get-pip.py'; \
+	wget -O get-pip.py "$PYTHON_GET_PIP_URL"; \
+	echo "$PYTHON_GET_PIP_SHA256 *get-pip.py" | sha256sum --check --strict -; \
 	\
 	pypy3 get-pip.py \
 		--disable-pip-version-check \
@@ -62,6 +72,12 @@ RUN set -ex; \
 # smoke test
 	pip --version; \
 	\
+	find /usr/local -depth \
+		\( \
+			\( -type d -a \( -name test -o -name tests \) \) \
+			-o \
+			\( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
+		\) -exec rm -rf '{}' +; \
 	rm -f get-pip.py
 
 CMD ["pypy3"]
