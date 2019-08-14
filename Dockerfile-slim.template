@@ -17,9 +17,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 ENV PYPY_VERSION %%PYPY_VERSION%%
 
-# if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION %%PIP_VERSION%%
-
 RUN set -ex; \
 	\
 # this "case" statement is generated via "update.sh"
@@ -51,18 +48,6 @@ RUN set -ex; \
 # TODO rebuild other cffi modules here too? (other _*_build.py files)
 	fi; \
 	\
-	wget -O get-pip.py 'https://bootstrap.pypa.io/get-pip.py'; \
-	\
-	%%CMD%% get-pip.py \
-		--disable-pip-version-check \
-		--no-cache-dir \
-		"pip==$PYTHON_PIP_VERSION" \
-	; \
-# smoke test
-	pip --version; \
-	\
-	rm -f get-pip.py; \
-	\
 	apt-mark auto '.*' > /dev/null; \
 	[ -z "$savedAptMark" ] || apt-mark manual $savedAptMark > /dev/null; \
 	find /usr/local -type f -executable -exec ldd '{}' ';' \
@@ -77,6 +62,44 @@ RUN set -ex; \
 # smoke test again, to be sure
 	rm -rf /var/lib/apt/lists/*; \
 	%%CMD%% --version; \
-	pip --version
+	find /usr/local -depth \
+		\( \
+			\( -type d -a \( -name test -o -name tests \) \) \
+			-o \
+			\( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
+		\) -exec rm -rf '{}' +
+
+# if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
+ENV PYTHON_PIP_VERSION %%PIP_VERSION%%
+# https://github.com/pypa/get-pip
+ENV PYTHON_GET_PIP_URL %%PYTHON_GET_PIP_URL%%
+ENV PYTHON_GET_PIP_SHA256 %%PYTHON_GET_PIP_SHA256%%
+
+RUN set -ex; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		wget \
+	; \
+	rm -rf /var/lib/apt/lists/*; \
+	\
+	wget -O get-pip.py "$PYTHON_GET_PIP_URL"; \
+	echo "$PYTHON_GET_PIP_SHA256 *get-pip.py" | sha256sum --check --strict -; \
+	\
+	%%CMD%% get-pip.py \
+		--disable-pip-version-check \
+		--no-cache-dir \
+		"pip==$PYTHON_PIP_VERSION" \
+	; \
+	apt-get purge -y --auto-remove wget; \
+# smoke test
+	pip --version; \
+	\
+	find /usr/local -depth \
+		\( \
+			\( -type d -a \( -name test -o -name tests \) \) \
+			-o \
+			\( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
+		\) -exec rm -rf '{}' +; \
+	rm -f get-pip.py
 
 CMD ["%%CMD%%"]
