@@ -12,6 +12,9 @@ fi
 versions=( "${versions[@]%/}" )
 
 pipVersion="$(curl -fsSL 'https://pypi.org/pypi/pip/json' | jq -r .info.version)"
+getPipCommit="$(curl -fsSL 'https://github.com/pypa/get-pip/commits/master/get-pip.py.atom' | tac|tac | awk -F '[[:space:]]*[<>/]+' '$2 == "id" && $3 ~ /Commit/ { print $4; exit }')"
+getPipUrl="https://github.com/pypa/get-pip/raw/$getPipCommit/get-pip.py"
+getPipSha256="$(curl -fsSL "$getPipUrl" | sha256sum | cut -d' ' -f1)"
 
 sha256s="$(curl -fsSL 'https://pypy.org/download.html')"
 scrapeSha256() {
@@ -113,6 +116,8 @@ for version in "${versions[@]}"; do
 		sed -r \
 			-e 's!%%PYPY_VERSION%%!'"$fullVersion"'!g' \
 			-e 's!%%PIP_VERSION%%!'"$pipVersion"'!g' \
+			-e 's!%%PYTHON_GET_PIP_URL%%!'"$getPipUrl"'!' \
+			-e 's!%%PYTHON_GET_PIP_SHA256%%!'"$getPipSha256"'!' \
 			-e 's!%%TAR%%!'"$pypy"'!g' \
 			-e 's!%%CMD%%!'"$cmd"'!g' \
 			-e 's!%%BASE%%!'"$base"'!g' \
