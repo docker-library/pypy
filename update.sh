@@ -28,8 +28,7 @@ scrapeSha256() {
 	# bdfea513d59dcd580970cb6f79f3a250d00191fd46b68133d5327e924ca845f8  pypy2-v5.4.0-linux64.tar.bz2
 	# ...
 	# </pre>
-	echo "$sha256s" \
-		| grep -m1 -E '[a-f0-9]{64}  '"$pypy-v$tryVersion"'-'"$arch"'.tar.bz2' \
+	grep -om1 -E '[a-f0-9]{64}  '"$pypy-v$tryVersion"'-'"$arch"'.tar.bz2' <<<"$sha256s" \
 		| cut -d' ' -f1
 }
 
