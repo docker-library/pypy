@@ -25,7 +25,7 @@ RUN set -ex; \
 # amd64
 		amd64) pypyArch='linux64'; sha256='d3d549e8f43de820ac3385b698b83fa59b4d7dd6cf3fe34c115f731e26ad8856' ;; \
 # arm64v8
-		arm64) pypyArch='aarch64'; sha256='b900241bca7152254c107a632767f49edede99ca6360b9a064141267b47ef598' ;; \
+		arm64) pypyArch='aarch64'; sha256='<pre' ;; \
 # i386
 		i386) pypyArch='linux32'; sha256='7045b295d38ba0b5ee65bd3f078ca249fcf1de73fedeaab2d6ad78de2eab0f0e' ;; \
 # ppc64le
