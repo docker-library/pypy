@@ -1,4 +1,4 @@
-FROM buildpack-deps:stretch
+FROM buildpack-deps:buster
 
 # ensure local pypy is preferred over distribution pypy
 ENV PATH /usr/local/bin:$PATH
