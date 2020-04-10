@@ -1,4 +1,4 @@
-FROM debian:jessie-slim
+FROM debian:buster-slim
 
 # ensure local pypy is preferred over distribution pypy
 ENV PATH /usr/local/bin:$PATH
@@ -7,13 +7,10 @@ ENV PATH /usr/local/bin:$PATH
 # > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
 ENV LANG C.UTF-8
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-		ca-certificates \
-		libexpat1 \
-		libffi6 \
-		libgdbm3 \
-		libsqlite3-0 \
-	&& rm -rf /var/lib/apt/lists/*
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends ca-certificates; \
+	rm -rf /var/lib/apt/lists/*
 
 ENV PYPY_VERSION 7.3.0
 

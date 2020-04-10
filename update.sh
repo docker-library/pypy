@@ -40,8 +40,8 @@ sed_escape_rhs() {
 travisEnv=
 for version in "${versions[@]}"; do
 	case "$version" in
-		3 | 3.*) cmd='pypy3'; base='stretch' ;;
-		2 | 2.*) cmd='pypy'; base='jessie' ;; # https://github.com/docker-library/pypy/issues/24#issuecomment-476873691
+		3 | 3.*) cmd='pypy3'; base='buster' ;;
+		2 | 2.*) cmd='pypy'; base='buster' ;;
 		*) echo >&2 "error: unknown pypy variant $version"; exit 1 ;;
 	esac
 	pypy="pypy$version"
@@ -93,8 +93,8 @@ for version in "${versions[@]}"; do
 	linuxArchCase+=$'\t''case "${dpkgArch##*-}" in '$'\\\n'
 	for dpkgArch in $(dpkgArches); do
 		bashbrewArch="$(dpkgToBashbrewArch "$dpkgArch")"
-		case "$base/$bashbrewArch" in
-			jessie/s390x | jessie/ppc64le)
+		case "$version/$bashbrewArch" in
+			2.7/s390x | 2.7/ppc64le)
 				echo >&2 "warning: skipping $pypy on $bashbrewArch; https://bitbucket.org/pypy/pypy/issues/2646"
 				continue
 				;;
