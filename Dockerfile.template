@@ -20,6 +20,15 @@ RUN set -ex; \
 # this "case" statement is generated via "update.sh"
 	%%ARCH-CASE%%; \
 	\
+	savedAptMark="$(apt-mark showmanual)"; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+# sometimes "%%CMD%%" itself is linked against libexpat1 / libncurses5, sometimes they're ".so" files in "/usr/local/lib_pypy"
+		libexpat1 \
+		libncurses5 \
+# (so we'll add them temporarily, then use "ldd" later to determine which to keep based on usage per architecture)
+	; \
+	\
 	wget -O pypy.tar.bz2 "https://bitbucket.org/pypy/pypy/downloads/%%TAR%%-v${PYPY_VERSION}-${pypyArch}.tar.bz2" --progress=dot:giga; \
 	echo "$sha256 *pypy.tar.bz2" | sha256sum -c; \
 	tar -xjC /usr/local --strip-components=1 -f pypy.tar.bz2; \
@@ -35,6 +44,22 @@ RUN set -ex; \
 		%%CMD%% _ssl_build.py; \
 # TODO rebuild other cffi modules here too? (other _*_build.py files)
 	fi; \
+	\
+	apt-mark auto '.*' > /dev/null; \
+	[ -z "$savedAptMark" ] || apt-mark manual $savedAptMark > /dev/null; \
+	find /usr/local -type f -executable -exec ldd '{}' ';' \
+		| awk '/=>/ { print $(NF-1) }' \
+		| sort -u \
+		| xargs -r dpkg-query --search \
+		| cut -d: -f1 \
+		| sort -u \
+		| xargs -r apt-mark manual \
+	; \
+	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+	rm -rf /var/lib/apt/lists/*; \
+# smoke test again, to be sure
+	%%CMD%% --version; \
+	\
 	find /usr/local -depth \
 		\( \
 			\( -type d -a \( -name test -o -name tests \) \) \
