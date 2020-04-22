@@ -37,8 +37,10 @@ RUN set -ex; \
 	apt-get install -y --no-install-recommends \
 		bzip2 \
 		wget \
-# sometimes "pypy3" itself is linked against libncurses5, sometimes it's a ".so" file in "/usr/local/lib_pypy"
+# sometimes "pypy3" itself is linked against libexpat1 / libncurses5, sometimes they're ".so" files in "/usr/local/lib_pypy"
+		libexpat1 \
 		libncurses5 \
+# (so we'll add them temporarily, then use "ldd" later to determine which to keep based on usage per architecture)
 	; \
 	\
 	wget -O pypy.tar.bz2 "https://bitbucket.org/pypy/pypy/downloads/pypy3.6-v${PYPY_VERSION}-${pypyArch}.tar.bz2" --progress=dot:giga; \
@@ -69,9 +71,10 @@ RUN set -ex; \
 		| xargs -r apt-mark manual \
 	; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-# smoke test again, to be sure
 	rm -rf /var/lib/apt/lists/*; \
+# smoke test again, to be sure
 	pypy3 --version; \
+	\
 	find /usr/local -depth \
 		\( \
 			\( -type d -a \( -name test -o -name tests \) \) \
