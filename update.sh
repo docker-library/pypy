@@ -37,7 +37,6 @@ sed_escape_rhs() {
 	echo "$@" | sed -e 's/[\/&]/\\&/g' | sed -e ':a;N;$!ba;s/\n/\\n/g'
 }
 
-travisEnv=
 for version in "${versions[@]}"; do
 	case "$version" in
 		3 | 3.*) cmd='pypy3'; base='buster' ;;
@@ -122,9 +121,5 @@ for version in "${versions[@]}"; do
 			-e 's!%%BASE%%!'"$base"'!g' \
 			-e 's!%%ARCH-CASE%%!'"$(sed_escape_rhs "$linuxArchCase")"'!g' \
 			"Dockerfile${variant:+-$variant}.template" > "$version/$variant/Dockerfile"
-		travisEnv='\n  - VERSION='"$version VARIANT=$variant$travisEnv"
 	done
 done
-
-travis="$(awk -v 'RS=\n\n' '$1 == "env:" { $0 = "env:'"$travisEnv"'" } { printf "%s%s", $0, RS }' .travis.yml)"
-echo "$travis" > .travis.yml
