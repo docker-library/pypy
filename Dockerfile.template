@@ -38,12 +38,17 @@ RUN set -ex; \
 # smoke test
 	%%CMD%% --version; \
 	\
-	if [ -f /usr/local/lib_pypy/_ssl_build.py ]; then \
-# on pypy3, rebuild ffi bits for compatibility with Debian Stretch+ (https://github.com/docker-library/pypy/issues/24#issuecomment-409408657)
-		cd /usr/local/lib_pypy; \
+# on pypy3, rebuild ffi bits for compatibility with Debian Stretch+
+	cd /usr/local/lib_pypy; \
+# https://github.com/docker-library/pypy/issues/24#issuecomment-409408657
+	if [ -f _ssl_build.py ]; then \
 		%%CMD%% _ssl_build.py; \
-# TODO rebuild other cffi modules here too? (other _*_build.py files)
 	fi; \
+# https://github.com/docker-library/pypy/issues/42
+	if [ -f _lzma_build.py ]; then \
+		%%CMD%% _lzma_build.py; \
+	fi; \
+# TODO rebuild other cffi modules here too? (other _*_build.py files)
 	\
 	apt-mark auto '.*' > /dev/null; \
 	[ -z "$savedAptMark" ] || apt-mark manual $savedAptMark > /dev/null; \
