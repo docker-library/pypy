@@ -45,11 +45,11 @@ for version in "${versions[@]}"; do
 	esac
 	pypy="pypy$version"
 
-	# <td class="name"><a class="execute" href="/pypy/pypy/downloads/pypy-2.4.0-linux64.tar.bz2">pypy-2.4.0-linux64.tar.bz2</a></td>
-	# <td class="name"><a class="execute" href="/pypy/pypy/downloads/pypy3-2.4.0-linux64.tar.bz2">pypy3-2.4.0-linux64.tar.bz2</a></td>
+	# <td class="filelink"><a href="pypy3.6-v7.3.1-aarch64.tar.bz2">pypy3.6-v7.3.1-aarch64.tar.bz2</a></td>
+	# <td class="filelink"><a href="pypy2.7-v7.3.1-aarch64.tar.bz2">pypy2.7-v7.3.1-aarch64.tar.bz2</a></td>
 	IFS=$'\n'
 	tryVersions=( $(
-		curl -fsSL 'https://bitbucket.org/pypy/pypy/downloads/' \
+		curl -fsSL 'https://downloads.python.org/pypy/' \
 			| sed -rn 's/^.*'"$pypy"'-v([0-9.]+(-alpha[0-9]*)?)-linux64.tar.bz2.*$/\1/gp' \
 			| sort -rV
 	) )
