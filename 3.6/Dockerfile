@@ -1,17 +1,20 @@
 FROM buildpack-deps:buster
 
-# ensure local pypy is preferred over distribution pypy
-ENV PATH /usr/local/bin:$PATH
-
 # http://bugs.python.org/issue19846
 # > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
 ENV LANG C.UTF-8
 
 # runtime dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
 		tcl \
 		tk \
-	&& rm -rf /var/lib/apt/lists/*
+	; \
+	rm -rf /var/lib/apt/lists/*
+
+# ensure local pypy is preferred over distribution pypy
+ENV PATH /opt/pypy/bin:$PATH
 
 ENV PYPY_VERSION 7.3.0
 
@@ -36,23 +39,26 @@ RUN set -ex; \
 	savedAptMark="$(apt-mark showmanual)"; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
-# sometimes "pypy3" itself is linked against libexpat1 / libncurses5, sometimes they're ".so" files in "/usr/local/lib_pypy"
+# sometimes "pypy3" itself is linked against libexpat1 / libncurses5, sometimes they're ".so" files in "/opt/pypy/lib_pypy"
 		libexpat1 \
 		libncurses5 \
 # (so we'll add them temporarily, then use "ldd" later to determine which to keep based on usage per architecture)
 	; \
 	\
-	wget -O pypy.tar.bz2 "https://bitbucket.org/pypy/pypy/downloads/pypy3.6-v${PYPY_VERSION}-${pypyArch}.tar.bz2" --progress=dot:giga; \
+	wget -O pypy.tar.bz2 "https://downloads.python.org/pypy/pypy3.6-v${PYPY_VERSION}-${pypyArch}.tar.bz2" --progress=dot:giga; \
 	echo "$sha256 *pypy.tar.bz2" | sha256sum -c; \
-	tar -xjC /usr/local --strip-components=1 -f pypy.tar.bz2; \
-	find /usr/local/lib-python -depth -type d -a \( -name test -o -name tests \) -exec rm -rf '{}' +; \
+	mkdir /opt/pypy; \
+	tar -xjC /opt/pypy --strip-components=1 -f pypy.tar.bz2; \
+	find /opt/pypy/lib-python -depth -type d -a \( -name test -o -name tests \) -exec rm -rf '{}' +; \
 	rm pypy.tar.bz2; \
+	\
+	ln -svT '/opt/pypy/bin/pypy3' '/usr/local/bin/pypy3'; \
 	\
 # smoke test
 	pypy3 --version; \
 	\
 # on pypy3, rebuild ffi bits for compatibility with Debian Stretch+
-	cd /usr/local/lib_pypy; \
+	cd /opt/pypy/lib_pypy; \
 # https://github.com/docker-library/pypy/issues/24#issuecomment-409408657
 	if [ -f _ssl_build.py ]; then \
 		pypy3 _ssl_build.py; \
@@ -65,7 +71,7 @@ RUN set -ex; \
 	\
 	apt-mark auto '.*' > /dev/null; \
 	[ -z "$savedAptMark" ] || apt-mark manual $savedAptMark > /dev/null; \
-	find /usr/local -type f -executable -exec ldd '{}' ';' \
+	find /opt/pypy -type f -executable -exec ldd '{}' ';' \
 		| awk '/=>/ { print $(NF-1) }' \
 		| sort -u \
 		| xargs -r dpkg-query --search \
@@ -78,7 +84,7 @@ RUN set -ex; \
 # smoke test again, to be sure
 	pypy3 --version; \
 	\
-	find /usr/local -depth \
+	find /opt/pypy -depth \
 		\( \
 			\( -type d -a \( -name test -o -name tests \) \) \
 			-o \
@@ -104,7 +110,7 @@ RUN set -ex; \
 # smoke test
 	pip --version; \
 	\
-	find /usr/local -depth \
+	find /opt/pypy -depth \
 		\( \
 			\( -type d -a \( -name test -o -name tests \) \) \
 			-o \
