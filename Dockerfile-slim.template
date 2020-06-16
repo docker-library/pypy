@@ -23,6 +23,7 @@ RUN set -ex; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
 		bzip2 \
+		patch \
 		wget \
 # sometimes "%%CMD%%" itself is linked against libexpat1 / libncurses5, sometimes they're ".so" files in "/opt/pypy/lib_pypy"
 		libexpat1 \
@@ -36,6 +37,12 @@ RUN set -ex; \
 	tar -xjC /opt/pypy --strip-components=1 -f pypy.tar.bz2; \
 	find /opt/pypy/lib-python -depth -type d -a \( -name test -o -name tests \) -exec rm -rf '{}' +; \
 	rm pypy.tar.bz2; \
+	\
+# https://foss.heptapod.net/pypy/pypy/issues/3210
+# https://foss.heptapod.net/pypy/pypy/commit/fbbe06715eb48df1a03640672d99335695d3e47c
+	wget -O pypy-sqlite.patch 'https://foss.heptapod.net/pypy/pypy/commit/fbbe06715eb48df1a03640672d99335695d3e47c.patch'; \
+	awk '$1 == "diff" { yes = ($3 == "a/lib_pypy/_sqlite3.py") } yes { print }' pypy-sqlite.patch | patch --strip=1 --directory=/opt/pypy; \
+	rm pypy-sqlite.patch; \
 	\
 	ln -svT '/opt/pypy/bin/%%CMD%%' '/usr/local/bin/%%CMD%%'; \
 	\
