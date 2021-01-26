@@ -11,8 +11,8 @@ if [ ${#versions[@]} -eq 0 ]; then
 fi
 versions=( "${versions[@]%/}" )
 
-pipVersion="$(curl -fsSL 'https://pypi.org/pypi/pip/json' | jq -r .info.version)"
-getPipCommit="$(curl -fsSL 'https://github.com/pypa/get-pip/commits/master/get-pip.py.atom' | tac|tac | awk -F '[[:space:]]*[<>/]+' '$2 == "id" && $3 ~ /Commit/ { print $4; exit }')"
+pipVersion="$(curl -fsSL 'https://pypi.org/pypi/pip/json' | jq '.releases | keys[] | select(startswith("20."))' -r | sort -rV | head -1)" # version 20.x is the last to support Python 2
+getPipCommit="$(curl -fsSL "https://github.com/pypa/get-pip/commits/$pipVersion/get-pip.py.atom" | tac|tac | awk -F '[[:space:]]*[<>/]+' '$2 == "id" && $3 ~ /Commit/ { print $4; exit }')"
 getPipUrl="https://github.com/pypa/get-pip/raw/$getPipCommit/get-pip.py"
 getPipSha256="$(curl -fsSL "$getPipUrl" | sha256sum | cut -d' ' -f1)"
 
