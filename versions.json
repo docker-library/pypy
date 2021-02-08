@@ -1,0 +1,97 @@
+{
+  "2.7": {
+    "arches": {
+      "amd64": {
+        "sha256": "f412b602ccd6912ddee0e7523e0e38f4b2c7a144449c2cad078cffbdb66fd7b1",
+        "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.3-linux64.tar.bz2"
+      },
+      "arm64v8": {
+        "sha256": "23b145b7cfbaeefb6ee76fc8216c83b652ab1daffac490558718edbbd60082d8",
+        "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.3-aarch64.tar.bz2"
+      },
+      "i386": {
+        "sha256": "bfbc81874b137837a8ba8c517b97de29f5a336f7ec500c52f2bfdbd3580d1703",
+        "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.3-linux32.tar.bz2"
+      }
+    },
+    "get-pip": {
+      "sha256": "95c5ee602b2f3cc50ae053d716c3c89bea62c58568f64d7d25924d399b2d5218",
+      "url": "https://github.com/pypa/get-pip/raw/3843bff3a0a61da5b63ea0b7d34794c5c51a2f11/get-pip.py",
+      "version": "3843bff3a0a61da5b63ea0b7d34794c5c51a2f11"
+    },
+    "pip": {
+      "version": "20.3.4"
+    },
+    "variants": [
+      "buster",
+      "slim-buster"
+    ],
+    "version": "7.3.3"
+  },
+  "3.6": {
+    "arches": {
+      "amd64": {
+        "sha256": "4fb85fdd516482cab727bb9473b066ff8fb672940dedf7ccc32bf92957d29e0a",
+        "url": "https://downloads.python.org/pypy/pypy3.6-v7.3.3-linux64.tar.bz2"
+      },
+      "arm64v8": {
+        "sha256": "bc82cf7f0182b942a2cfad4a0d167f364bfbf18f434e100a2fe62bc88547ac9b",
+        "url": "https://downloads.python.org/pypy/pypy3.6-v7.3.3-aarch64.tar.bz2"
+      },
+      "i386": {
+        "sha256": "f183c61e66fd2c536a65695bd7ff770748c2884c235a589b9c6ac63690770c69",
+        "url": "https://downloads.python.org/pypy/pypy3.6-v7.3.3-linux32.tar.bz2"
+      },
+      "s390x": {
+        "sha256": "0de9c33ff3500c6e7fd273d0a6d341bc839b0298f697c4d6fe141f2b54c5c3e2",
+        "url": "https://downloads.python.org/pypy/pypy3.6-v7.3.3-s390x.tar.bz2"
+      }
+    },
+    "get-pip": {
+      "sha256": "95c5ee602b2f3cc50ae053d716c3c89bea62c58568f64d7d25924d399b2d5218",
+      "url": "https://github.com/pypa/get-pip/raw/3843bff3a0a61da5b63ea0b7d34794c5c51a2f11/get-pip.py",
+      "version": "3843bff3a0a61da5b63ea0b7d34794c5c51a2f11"
+    },
+    "pip": {
+      "version": "20.3.4"
+    },
+    "variants": [
+      "buster",
+      "slim-buster"
+    ],
+    "version": "7.3.3"
+  },
+  "3.7": {
+    "arches": {
+      "amd64": {
+        "sha256": "37e2804c4661c86c857d709d28c7de716b000d31e89766599fdf5a98928b7096",
+        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.3-linux64.tar.bz2"
+      },
+      "arm64v8": {
+        "sha256": "ee4aa041558b58de6063dd6df93b3def221c4ca4c900d6a9db5b1b52135703a8",
+        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.3-aarch64.tar.bz2"
+      },
+      "i386": {
+        "sha256": "7d81b8e9fcd07c067cfe2f519ab770ec62928ee8787f952cadf2d2786246efc8",
+        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.3-linux32.tar.bz2"
+      },
+      "s390x": {
+        "sha256": "92000d90b9a37f2e9cb7885f2a872adfa9e48e74bf7f84a8b8185c8181f0502d",
+        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.3-s390x.tar.bz2"
+      }
+    },
+    "get-pip": {
+      "sha256": "95c5ee602b2f3cc50ae053d716c3c89bea62c58568f64d7d25924d399b2d5218",
+      "url": "https://github.com/pypa/get-pip/raw/3843bff3a0a61da5b63ea0b7d34794c5c51a2f11/get-pip.py",
+      "version": "3843bff3a0a61da5b63ea0b7d34794c5c51a2f11"
+    },
+    "pip": {
+      "version": "20.3.4"
+    },
+    "variants": [
+      "buster",
+      "slim-buster"
+    ],
+    "version": "7.3.3"
+  }
+}
