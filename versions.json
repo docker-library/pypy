@@ -12,6 +12,10 @@
       "i386": {
         "sha256": "bfbc81874b137837a8ba8c517b97de29f5a336f7ec500c52f2bfdbd3580d1703",
         "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.3-linux32.tar.bz2"
+      },
+      "windows-amd64": {
+        "sha256": "b3e660dae8d25d8278fd6a0db77e76a16ac9a8c1dca22e7e103d39ed696dc69e",
+        "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.3-win32.zip"
       }
     },
     "get-pip": {
@@ -24,7 +28,8 @@
     },
     "variants": [
       "buster",
-      "slim-buster"
+      "slim-buster",
+      "windows/windowsservercore-1809"
     ],
     "version": "7.3.3"
   },
@@ -45,6 +50,10 @@
       "s390x": {
         "sha256": "0de9c33ff3500c6e7fd273d0a6d341bc839b0298f697c4d6fe141f2b54c5c3e2",
         "url": "https://downloads.python.org/pypy/pypy3.6-v7.3.3-s390x.tar.bz2"
+      },
+      "windows-amd64": {
+        "sha256": "b935253877b703d29b1b11f79e66944f1f88adb8a76f871abf765d4de9d25f8a",
+        "url": "https://downloads.python.org/pypy/pypy3.6-v7.3.3-win32.zip"
       }
     },
     "get-pip": {
@@ -57,7 +66,8 @@
     },
     "variants": [
       "buster",
-      "slim-buster"
+      "slim-buster",
+      "windows/windowsservercore-1809"
     ],
     "version": "7.3.3"
   },
@@ -78,6 +88,10 @@
       "s390x": {
         "sha256": "92000d90b9a37f2e9cb7885f2a872adfa9e48e74bf7f84a8b8185c8181f0502d",
         "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.3-s390x.tar.bz2"
+      },
+      "windows-amd64": {
+        "sha256": "a282ce40aa4f853e877a5dbb38f0a586a29e563ae9ba82fd50c7e5dc465fb649",
+        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.3-win32.zip"
       }
     },
     "get-pip": {
@@ -90,7 +104,8 @@
     },
     "variants": [
       "buster",
-      "slim-buster"
+      "slim-buster",
+      "windows/windowsservercore-1809"
     ],
     "version": "7.3.3"
   }

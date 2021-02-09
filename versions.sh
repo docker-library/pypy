@@ -8,6 +8,7 @@ declare -A pypyArches=(
 	['arm32v7']='linux-armhf-raring'
 	['arm64v8']='aarch64'
 	['i386']='linux32'
+	['windows-amd64']='win32'
 
 	# see https://foss.heptapod.net/pypy/pypy/-/issues/2646 for some s390x/ppc64le caveats (mitigated in 3.x via https://github.com/docker-library/pypy/issues/24#issuecomment-476873691)
 	['ppc64le']='ppc64le'
@@ -47,7 +48,12 @@ pypy_tarball() {
 	local fullVersion="$1"; shift
 	local arch="$1"; shift
 
-	echo "pypy$pypy-v$fullVersion-$arch.tar.bz2"
+	local ext='tar.bz2'
+	if [ "$arch" = 'win32' ]; then
+		ext='zip'
+	fi
+
+	echo "pypy$pypy-v$fullVersion-$arch.$ext"
 }
 scrape_sha256() {
 	local tarball="$1"; shift
@@ -105,7 +111,6 @@ for version in "${versions[@]}"; do
 				sha256: env.getPipSha256,
 				url: env.getPipUrl,
 			},
-			variants: [ "buster", "slim-buster" ],
 		}
 	')"
 
@@ -156,7 +161,21 @@ for version in "${versions[@]}"; do
 		fi
 	done
 
-	json="$(jq <<<"$json" -c --argjson doc "$doc" '.[env.version] = $doc')"
+	json="$(jq <<<"$json" -c --argjson doc "$doc" '
+		.[env.version] = $doc + {
+			variants: [
+				(
+					"buster"
+				| ., "slim-" + .),
+
+				if $doc.arches | keys | any(startswith("windows-")) then
+					(
+						"1809"
+					| "windows/windowsservercore-" + .)
+				else empty end
+			],
+		}
+	')"
 done
 
 jq <<<"$json" -S . > versions.json

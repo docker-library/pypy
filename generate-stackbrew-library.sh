@@ -101,19 +101,18 @@ for version; do
 		fi
 	done
 
-	for variant in "${variants[@]}"; do
-		dir="$version/$variant"
+	for v in "${variants[@]}"; do
+		dir="$version/$v"
 		[ -f "$dir/Dockerfile" ] || continue
+		variant="$(basename "$v")"
 
 		commit="$(dirCommit "$dir")"
 
 		variantAliases=( "${versionAliases[@]/%/-$variant}" )
+		sharedTags=()
 		case "$variant" in
-			"$defaultDebianSuite")
-				variantAliases=(
-					"${versionAliases[@]}"
-					"${variantAliases[@]}"
-				)
+			"$defaultDebianSuite" | windowsservercore-*)
+				sharedTags=( "${versionAliases[@]}" )
 				;;
 			slim-"$defaultDebianSuite")
 				variantAliases=(
@@ -124,25 +123,51 @@ for version; do
 		esac
 		variantAliases=( "${variantAliases[@]//latest-/}" )
 
-		variantParent="$(awk 'toupper($1) == "FROM" { print $2; exit }' "$dir/Dockerfile")"
-		variantArches="${parentRepoToArches[$variantParent]:-}"
-		variantArches="$(
-			comm -12 \
-				<(
-					jq -r '
-						.[env.version].arches
-						| keys[]
-					' versions.json | sort
-				) \
-				<(xargs -n1 <<<"$variantArches" | sort)
-		)"
+		for windowsShared in windowsservercore nanoserver; do
+			if [[ "$variant" == "$windowsShared"* ]]; then
+				sharedTags+=( "${versionAliases[@]/%/-$windowsShared}" )
+				sharedTags=( "${sharedTags[@]//latest-/}" )
+				break
+			fi
+		done
+
+		constraints=
+		case "$v" in
+			windows/*)
+				variantArches="$(jq -r '
+					.[env.version].arches
+					| keys[]
+					| select(startswith("windows-"))
+				' versions.json | sort)"
+				constraints="$variant"
+				;;
+
+			*)
+				variantParent="$(awk 'toupper($1) == "FROM" { print $2; exit }' "$dir/Dockerfile")"
+				variantArches="${parentRepoToArches[$variantParent]:-}"
+				variantArches="$(
+					comm -12 \
+						<(
+							jq -r '
+								.[env.version].arches
+								| keys[]
+							' versions.json | sort
+						) \
+						<(xargs -n1 <<<"$variantArches" | sort)
+				)"
+				;;
+		esac
 
 		echo
+		echo "Tags: $(join ', ' "${variantAliases[@]}")"
+		if [ "${#sharedTags[@]}" -gt 0 ]; then
+			echo "SharedTags: $(join ', ' "${sharedTags[@]}")"
+		fi
 		cat <<-EOE
-			Tags: $(join ', ' "${variantAliases[@]}")
 			Architectures: $(join ', ' $variantArches)
 			GitCommit: $commit
 			Directory: $dir
 		EOE
+		[ -z "$constraints" ] || echo "Constraints: $constraints"
 	done
 done

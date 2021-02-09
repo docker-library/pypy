@@ -37,6 +37,7 @@ RUN set -eux; \
 {{
 	[
 		.arches | to_entries[]
+		| select(.key | startswith("windows-") | not)
 		| .key as $bashbrewArch
 		| (
 			{

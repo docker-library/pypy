@@ -48,7 +48,7 @@ for version; do
 				windowsRelease="${variant#$windowsVariant-}" # "1809", "ltsc2016", etc
 				windowsVariant="${windowsVariant#windows}" # "servercore", "nanoserver"
 				export windowsVariant windowsRelease
-				template='Dockerfile-windows.template'
+				template="Dockerfile-windows-$windowsVariant.template"
 				;;
 
 			*)
