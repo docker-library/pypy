@@ -47,6 +47,7 @@ RUN set -eux; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
 		bzip2 \
+		patch \
 		wget \
 # sometimes "pypy3" itself is linked against libexpat1 / libncurses5, sometimes they're ".so" files in "/opt/pypy/lib_pypy"
 		libexpat1 \
@@ -60,6 +61,15 @@ RUN set -eux; \
 	tar -xjC /opt/pypy --strip-components=1 -f pypy.tar.bz2; \
 	find /opt/pypy/lib-python -depth -type d -a \( -name test -o -name tests \) -exec rm -rf '{}' +; \
 	rm pypy.tar.bz2; \
+	\
+# https://github.com/docker-library/pypy/issues/49
+	wget -O import.patch 'https://foss.heptapod.net/pypy/pypy/-/commit/16faa2be85839e6ab4fb8ee09298a4d934aab81f.patch'; \
+	echo '2d4bcc434077685a4ff26c1c1f28109ff67ef7e68f1f831ce0f2d9ddd6a194d0 *import.patch' | sha256sum --check --strict -; \
+	wget -O crypt-utf8.patch 'https://foss.heptapod.net/pypy/pypy/-/commit/c63da169246ed972fe90e1c289fc2378236fa852.patch'; \
+	echo 'ab1529948c49fd29fb76b3c20ec7d3d9c50603aa0c549a8a31339eb940e0f4d3 *crypt-utf8.patch' | sha256sum --check --strict -; \
+	patch --input="$PWD/import.patch" --directory=/opt/pypy --strip=1; \
+	patch --input="$PWD/crypt-utf8.patch" --directory=/opt/pypy --strip=1; \
+	rm import.patch crypt-utf8.patch; \
 	\
 	ln -sv '/opt/pypy/bin/pypy3' /usr/local/bin/; \
 	\
