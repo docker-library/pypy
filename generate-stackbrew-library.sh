@@ -2,17 +2,22 @@
 set -Eeuo pipefail
 
 declare -A aliases=(
-	[3.6]='3'
-	[2.7]='2'
+	['3.6']='3'
+	['2.7']='2'
 )
+
+defaultDebianSuite='buster'
 
 self="$(basename "$BASH_SOURCE")"
 cd "$(dirname "$(readlink -f "$BASH_SOURCE")")"
 
-source '.architectures-lib'
+if [ "$#" -eq 0 ]; then
+	versions="$(jq -r 'keys | map(@sh) | join(" ")' versions.json)"
+	eval "set -- $versions"
+fi
 
-versions=( */ )
-versions=( "${versions[@]%/}" )
+# sort version numbers with highest first
+IFS=$'\n'; set -- $(sort -rV <<<"$*"); unset IFS
 
 # get the most recent commit which modified any of "$@"
 fileCommit() {
@@ -24,17 +29,37 @@ dirCommit() {
 	local dir="$1"; shift
 	(
 		cd "$dir"
-		fileCommit \
-			Dockerfile \
-			$(git show HEAD:./Dockerfile | awk '
+		files="$(
+			git show HEAD:./Dockerfile | awk '
 				toupper($1) == "COPY" {
 					for (i = 2; i < NF; i++) {
+						if ($i ~ /^--from=/) {
+							next
+						}
 						print $i
 					}
 				}
-			')
+			'
+		)"
+		fileCommit Dockerfile $files
 	)
 }
+
+getArches() {
+	local repo="$1"; shift
+	local officialImagesUrl='https://github.com/docker-library/official-images/raw/master/library/'
+
+	eval "declare -g -A parentRepoToArches=( $(
+		find -name 'Dockerfile' -exec awk '
+				toupper($1) == "FROM" && $2 !~ /^('"$repo"'|scratch|.*\/.*)(:|$)/ {
+					print "'"$officialImagesUrl"'" $2
+				}
+			' '{}' + \
+			| sort -u \
+			| xargs bashbrew cat --format '[{{ .RepoName }}:{{ .TagName }}]="{{ join " " .TagEntry.Architectures }}"'
+	) )"
+}
+getArches 'pypy'
 
 cat <<-EOH
 # this file is generated via https://github.com/docker-library/pypy/blob/$(fileCommit "$self")/$self
@@ -51,11 +76,12 @@ join() {
 	echo "${out#$sep}"
 }
 
-for version in "${versions[@]}"; do
-	commit="$(dirCommit "$version")"
+for version; do
+	export version
+	variants="$(jq -r '.[env.version].variants | map(@sh) | join(" ")' versions.json)"
+	eval "variants=( $variants )"
 
-	fullVersion="$(git show "$commit":"$version/Dockerfile" | awk '$1 == "ENV" && $2 == "PYPY_VERSION" { print $3; exit }')"
-	#fullVersion="$version-$fullVersion"
+	fullVersion="$(jq -r '.[env.version].version' versions.json)"
 
 	pypyVersionAliases=()
 	while [ "${fullVersion%[.-]*}" != "$fullVersion" ]; do
@@ -75,28 +101,41 @@ for version in "${versions[@]}"; do
 		fi
 	done
 
-	for variant in '' slim; do
-		dir="$version${variant:+/$variant}"
+	for variant in "${variants[@]}"; do
+		dir="$version/$variant"
 		[ -f "$dir/Dockerfile" ] || continue
 
 		commit="$(dirCommit "$dir")"
 
-		variantAliases=( "${versionAliases[@]}" )
-		if [ -n "$variant" ]; then
-			variantAliases=( "${variantAliases[@]/%/-$variant}" )
-			variantAliases=( "${variantAliases[@]//latest-/}" )
-		fi
+		variantAliases=( "${versionAliases[@]/%/-$variant}" )
+		case "$variant" in
+			"$defaultDebianSuite")
+				variantAliases=(
+					"${versionAliases[@]}"
+					"${variantAliases[@]}"
+				)
+				;;
+			slim-"$defaultDebianSuite")
+				variantAliases=(
+					"${versionAliases[@]/%/-slim}"
+					"${variantAliases[@]}"
+				)
+				;;
+		esac
+		variantAliases=( "${variantAliases[@]//latest-/}" )
 
-		variantParent="$(parent "$dir")"
-
-		suite="${variantParent#*:}" # "jessie-slim", "stretch"
-		suite="${suite%-slim}" # "jessie", "stretch"
-
-		suiteAliases=( "${variantAliases[@]/%/-$suite}" )
-		suiteAliases=( "${suiteAliases[@]//latest-/}" )
-		variantAliases+=( "${suiteAliases[@]}" )
-
-		variantArches="$(parentArches "$dir" "$variantParent")"
+		variantParent="$(awk 'toupper($1) == "FROM" { print $2; exit }' "$dir/Dockerfile")"
+		variantArches="${parentRepoToArches[$variantParent]:-}"
+		variantArches="$(
+			comm -12 \
+				<(
+					jq -r '
+						.[env.version].arches
+						| keys[]
+					' versions.json | sort
+				) \
+				<(xargs -n1 <<<"$variantArches" | sort)
+		)"
 
 		echo
 		cat <<-EOE
