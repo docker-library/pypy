@@ -18,23 +18,23 @@ ENV LANG C.UTF-8
 # ensure local pypy is preferred over distribution pypy
 ENV PATH /opt/pypy/bin:$PATH
 
-ENV PYPY_VERSION 7.3.3
+ENV PYPY_VERSION 7.3.4
 
 RUN set -eux; \
 	\
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
 		'amd64') \
-			url='https://downloads.python.org/pypy/pypy2.7-v7.3.3-linux64.tar.bz2'; \
-			sha256='f412b602ccd6912ddee0e7523e0e38f4b2c7a144449c2cad078cffbdb66fd7b1'; \
+			url='https://downloads.python.org/pypy/pypy2.7-v7.3.4-linux64.tar.bz2'; \
+			sha256='d3f7b0625e770d9be62201765d7d2316febc463372fba9c93a12969d26ae03dd'; \
 			;; \
 		'arm64') \
-			url='https://downloads.python.org/pypy/pypy2.7-v7.3.3-aarch64.tar.bz2'; \
-			sha256='23b145b7cfbaeefb6ee76fc8216c83b652ab1daffac490558718edbbd60082d8'; \
+			url='https://downloads.python.org/pypy/pypy2.7-v7.3.4-aarch64.tar.bz2'; \
+			sha256='9e741162ce486b14fbcf5aa377796d26b0529a9352fb602ee8b66c005f8420d1'; \
 			;; \
 		'i386') \
-			url='https://downloads.python.org/pypy/pypy2.7-v7.3.3-linux32.tar.bz2'; \
-			sha256='bfbc81874b137837a8ba8c517b97de29f5a336f7ec500c52f2bfdbd3580d1703'; \
+			url='https://downloads.python.org/pypy/pypy2.7-v7.3.4-linux32.tar.bz2'; \
+			sha256='653cc3f0612399e494021027f4463d62639dffa4345736a16d0704f3f8a61d5f'; \
 			;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
