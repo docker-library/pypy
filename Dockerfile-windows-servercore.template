@@ -18,11 +18,11 @@ RUN $newPath = ('C:\pypy;C:\pypy\Scripts;{0}' -f $env:PATH); \
 # doing this first to share cache across versions more aggressively
 
 # install Microsoft Visual C++ Redistributable
-RUN $url = 'https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x86.exe'; \
+RUN $url = 'https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x64.exe'; \
 	Write-Host ('Downloading {0} ...' -f $url); \
 	Invoke-WebRequest -Uri $url -OutFile 'vc.exe'; \
 	\
-	$sha256 = '12a69af8623d70026690ba14139bf3793cc76c865759cad301b207c1793063ed'; \
+	$sha256 = 'da66717784c192f1004e856bbcf7b3e13b7bf3ea45932c48e4c9b9a50ca80965'; \
 	Write-Host ('Verifying sha256 ({0}) ...' -f $sha256); \
 	if ((Get-FileHash vc.exe -Algorithm sha256).Hash -ne $sha256) { \
 		Write-Host 'FAILED!'; \

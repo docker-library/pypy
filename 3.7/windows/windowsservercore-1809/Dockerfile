@@ -17,11 +17,11 @@ RUN $newPath = ('C:\pypy;C:\pypy\Scripts;{0}' -f $env:PATH); \
 # doing this first to share cache across versions more aggressively
 
 # install Microsoft Visual C++ Redistributable
-RUN $url = 'https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x86.exe'; \
+RUN $url = 'https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x64.exe'; \
 	Write-Host ('Downloading {0} ...' -f $url); \
 	Invoke-WebRequest -Uri $url -OutFile 'vc.exe'; \
 	\
-	$sha256 = '12a69af8623d70026690ba14139bf3793cc76c865759cad301b207c1793063ed'; \
+	$sha256 = 'da66717784c192f1004e856bbcf7b3e13b7bf3ea45932c48e4c9b9a50ca80965'; \
 	Write-Host ('Verifying sha256 ({0}) ...' -f $sha256); \
 	if ((Get-FileHash vc.exe -Algorithm sha256).Hash -ne $sha256) { \
 		Write-Host 'FAILED!'; \
@@ -44,13 +44,13 @@ RUN $url = 'https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81C
 	\
 	Write-Host 'Complete.'
 
-ENV PYPY_VERSION 7.3.3
+ENV PYPY_VERSION 7.3.4
 
-RUN $url = 'https://downloads.python.org/pypy/pypy3.7-v7.3.3-win32.zip'; \
+RUN $url = 'https://downloads.python.org/pypy/pypy3.7-v7.3.4-win64.zip'; \
 	Write-Host ('Downloading {0} ...' -f $url); \
 	Invoke-WebRequest -Uri $url -OutFile 'pypy.zip'; \
 	\
-	$sha256 = 'a282ce40aa4f853e877a5dbb38f0a586a29e563ae9ba82fd50c7e5dc465fb649'; \
+	$sha256 = '0ff4e4653f1ff0653f105680eb101c64c857fa8f828a54a61b02f65c94b5d262'; \
 	Write-Host ('Verifying sha256 ({0}) ...' -f $sha256); \
 	if ((Get-FileHash pypy.zip -Algorithm sha256).Hash -ne $sha256) { \
 		Write-Host 'FAILED!'; \
@@ -64,7 +64,7 @@ RUN $url = 'https://downloads.python.org/pypy/pypy3.7-v7.3.3-win32.zip'; \
 	Remove-Item pypy.zip -Force; \
 	\
 	Write-Host 'Renaming ...'; \
-	Rename-Item -Path C:\pypy3.7-v7.3.3-win32 -NewName C:\pypy; \
+	Rename-Item -Path C:\pypy3.7-v7.3.4-win64 -NewName C:\pypy; \
 	\
 	Write-Host 'Verifying install ("pypy3 --version") ...'; \
 	pypy3 --version; \
