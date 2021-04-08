@@ -18,27 +18,27 @@ ENV LANG C.UTF-8
 # ensure local pypy3 is preferred over distribution pypy3
 ENV PATH /opt/pypy/bin:$PATH
 
-ENV PYPY_VERSION 7.3.3
+ENV PYPY_VERSION 7.3.4
 
 RUN set -eux; \
 	\
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
 		'amd64') \
-			url='https://downloads.python.org/pypy/pypy3.7-v7.3.3-linux64.tar.bz2'; \
-			sha256='37e2804c4661c86c857d709d28c7de716b000d31e89766599fdf5a98928b7096'; \
+			url='https://downloads.python.org/pypy/pypy3.7-v7.3.4-linux64.tar.bz2'; \
+			sha256='09d7298b44a38648a87995ec06e1e093761644e50f547c8bb0b2d7f4fe433548'; \
 			;; \
 		'arm64') \
-			url='https://downloads.python.org/pypy/pypy3.7-v7.3.3-aarch64.tar.bz2'; \
-			sha256='ee4aa041558b58de6063dd6df93b3def221c4ca4c900d6a9db5b1b52135703a8'; \
+			url='https://downloads.python.org/pypy/pypy3.7-v7.3.4-aarch64.tar.bz2'; \
+			sha256='a4148fa73b74a091e004e1f378b278c0b8830984cbcb91e10fa31fd915c43efe'; \
 			;; \
 		'i386') \
-			url='https://downloads.python.org/pypy/pypy3.7-v7.3.3-linux32.tar.bz2'; \
-			sha256='7d81b8e9fcd07c067cfe2f519ab770ec62928ee8787f952cadf2d2786246efc8'; \
+			url='https://downloads.python.org/pypy/pypy3.7-v7.3.4-linux32.tar.bz2'; \
+			sha256='04de1a2e80530f3d74abcf133ec046a0fb12d81956bc043dee8ab4799f3b77eb'; \
 			;; \
 		's390x') \
-			url='https://downloads.python.org/pypy/pypy3.7-v7.3.3-s390x.tar.bz2'; \
-			sha256='92000d90b9a37f2e9cb7885f2a872adfa9e48e74bf7f84a8b8185c8181f0502d'; \
+			url='https://downloads.python.org/pypy/pypy3.7-v7.3.4-s390x.tar.bz2'; \
+			sha256='7d6fb180c359a66a158ef6e81eeca88fbabbb62656a1700f425a70db18de2a0f'; \
 			;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
@@ -47,7 +47,6 @@ RUN set -eux; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
 		bzip2 \
-		patch \
 		wget \
 # sometimes "pypy3" itself is linked against libexpat1 / libncurses5, sometimes they're ".so" files in "/opt/pypy/lib_pypy"
 		libexpat1 \
@@ -61,15 +60,6 @@ RUN set -eux; \
 	tar -xjC /opt/pypy --strip-components=1 -f pypy.tar.bz2; \
 	find /opt/pypy/lib-python -depth -type d -a \( -name test -o -name tests \) -exec rm -rf '{}' +; \
 	rm pypy.tar.bz2; \
-	\
-# https://github.com/docker-library/pypy/issues/49
-	wget -O import.patch 'https://foss.heptapod.net/pypy/pypy/-/commit/16faa2be85839e6ab4fb8ee09298a4d934aab81f.patch'; \
-	echo '2d4bcc434077685a4ff26c1c1f28109ff67ef7e68f1f831ce0f2d9ddd6a194d0 *import.patch' | sha256sum --check --strict -; \
-	wget -O crypt-utf8.patch 'https://foss.heptapod.net/pypy/pypy/-/commit/c63da169246ed972fe90e1c289fc2378236fa852.patch'; \
-	echo 'ab1529948c49fd29fb76b3c20ec7d3d9c50603aa0c549a8a31339eb940e0f4d3 *crypt-utf8.patch' | sha256sum --check --strict -; \
-	patch --input="$PWD/import.patch" --directory=/opt/pypy --strip=1; \
-	patch --input="$PWD/crypt-utf8.patch" --directory=/opt/pypy --strip=1; \
-	rm import.patch crypt-utf8.patch; \
 	\
 	ln -sv '/opt/pypy/bin/pypy3' /usr/local/bin/; \
 	\

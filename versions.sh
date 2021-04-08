@@ -8,7 +8,7 @@ declare -A pypyArches=(
 	['arm32v7']='linux-armhf-raring'
 	['arm64v8']='aarch64'
 	['i386']='linux32'
-	['windows-amd64']='win32'
+	['windows-amd64']='win64'
 
 	# see https://foss.heptapod.net/pypy/pypy/-/issues/2646 for some s390x/ppc64le caveats (mitigated in 3.x via https://github.com/docker-library/pypy/issues/24#issuecomment-476873691)
 	['ppc64le']='ppc64le'
@@ -49,7 +49,7 @@ pypy_tarball() {
 	local arch="$1"; shift
 
 	local ext='tar.bz2'
-	if [ "$arch" = 'win32' ]; then
+	if [ "$arch" = 'win64' ]; then
 		ext='zip'
 	fi
 

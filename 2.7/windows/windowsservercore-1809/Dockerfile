@@ -9,6 +9,9 @@ FROM mcr.microsoft.com/windows/servercore:1809
 # $ProgressPreference: https://github.com/PowerShell/PowerShell/issues/2138#issuecomment-251261324
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
+# https://github.com/docker-library/python/issues/147
+ENV PYTHONIOENCODING UTF-8
+
 # PATH isn't actually set in the Docker image, so we have to set it from within the container
 RUN $newPath = ('C:\pypy;C:\pypy\Scripts;{0}' -f $env:PATH); \
 	Write-Host ('Updating PATH: {0}' -f $newPath); \
@@ -17,11 +20,11 @@ RUN $newPath = ('C:\pypy;C:\pypy\Scripts;{0}' -f $env:PATH); \
 # doing this first to share cache across versions more aggressively
 
 # install Microsoft Visual C++ Redistributable
-RUN $url = 'https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x86.exe'; \
+RUN $url = 'https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x64.exe'; \
 	Write-Host ('Downloading {0} ...' -f $url); \
 	Invoke-WebRequest -Uri $url -OutFile 'vc.exe'; \
 	\
-	$sha256 = '12a69af8623d70026690ba14139bf3793cc76c865759cad301b207c1793063ed'; \
+	$sha256 = 'da66717784c192f1004e856bbcf7b3e13b7bf3ea45932c48e4c9b9a50ca80965'; \
 	Write-Host ('Verifying sha256 ({0}) ...' -f $sha256); \
 	if ((Get-FileHash vc.exe -Algorithm sha256).Hash -ne $sha256) { \
 		Write-Host 'FAILED!'; \
@@ -44,13 +47,13 @@ RUN $url = 'https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81C
 	\
 	Write-Host 'Complete.'
 
-ENV PYPY_VERSION 7.3.3
+ENV PYPY_VERSION 7.3.4
 
-RUN $url = 'https://downloads.python.org/pypy/pypy3.6-v7.3.3-win32.zip'; \
+RUN $url = 'https://downloads.python.org/pypy/pypy2.7-v7.3.4-win64.zip'; \
 	Write-Host ('Downloading {0} ...' -f $url); \
 	Invoke-WebRequest -Uri $url -OutFile 'pypy.zip'; \
 	\
-	$sha256 = 'b935253877b703d29b1b11f79e66944f1f88adb8a76f871abf765d4de9d25f8a'; \
+	$sha256 = '1080012d7a3cea65182528259b51d52b1f61a3717377c2d9ba11ef36e06162d5'; \
 	Write-Host ('Verifying sha256 ({0}) ...' -f $sha256); \
 	if ((Get-FileHash pypy.zip -Algorithm sha256).Hash -ne $sha256) { \
 		Write-Host 'FAILED!'; \
@@ -64,10 +67,10 @@ RUN $url = 'https://downloads.python.org/pypy/pypy3.6-v7.3.3-win32.zip'; \
 	Remove-Item pypy.zip -Force; \
 	\
 	Write-Host 'Renaming ...'; \
-	Rename-Item -Path C:\pypy3.6-v7.3.3-win32 -NewName C:\pypy; \
+	Rename-Item -Path C:\pypy2.7-v7.3.4-win64 -NewName C:\pypy; \
 	\
-	Write-Host 'Verifying install ("pypy3 --version") ...'; \
-	pypy3 --version; \
+	Write-Host 'Verifying install ("pypy --version") ...'; \
+	pypy --version; \
 	\
 	Write-Host 'Cleanup install ...'; \
 	Get-ChildItem \
@@ -101,7 +104,7 @@ RUN Write-Host ('Downloading get-pip.py ({0}) ...' -f $env:PYTHON_GET_PIP_URL); 
 	}; \
 	\
 	Write-Host ('Installing "pip == {0}" ...' -f $env:PYTHON_PIP_VERSION); \
-	pypy3 get-pip.py \
+	pypy get-pip.py \
 		--disable-pip-version-check \
 		--no-cache-dir \
 		('pip == {0}' -f $env:PYTHON_PIP_VERSION) \
@@ -127,4 +130,4 @@ RUN Write-Host ('Downloading get-pip.py ({0}) ...' -f $env:PYTHON_GET_PIP_URL); 
 	\
 	Write-Host 'Complete.'
 
-CMD ["pypy3"]
+CMD ["pypy"]
