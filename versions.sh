@@ -42,7 +42,7 @@ getPipUrl="https://github.com/pypa/get-pip/raw/$getPipCommit/get-pip.py"
 getPipSha256="$(curl -fsSL "$getPipUrl" | sha256sum | cut -d' ' -f1)"
 export pipVersion getPipCommit getPipUrl getPipSha256
 
-sha256s="$(curl -fsSL --compressed 'https://pypy.org/download.html')"
+sha256s="$(curl -fsSL --compressed 'https://www.pypy.org/checksums.html')"
 pypy_tarball() {
 	local pypy="$1"; shift
 	local fullVersion="$1"; shift
