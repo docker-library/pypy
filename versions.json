@@ -27,6 +27,8 @@
       "version": "20.3.4"
     },
     "variants": [
+      "bullseye",
+      "slim-bullseye",
       "buster",
       "slim-buster",
       "windows/windowsservercore-1809"
@@ -65,6 +67,8 @@
       "version": "20.3.4"
     },
     "variants": [
+      "bullseye",
+      "slim-bullseye",
       "buster",
       "slim-buster",
       "windows/windowsservercore-1809"

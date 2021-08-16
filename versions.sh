@@ -165,6 +165,7 @@ for version in "${versions[@]}"; do
 		.[env.version] = $doc + {
 			variants: [
 				(
+					"bullseye",
 					"buster"
 				| ., "slim-" + .),
 
