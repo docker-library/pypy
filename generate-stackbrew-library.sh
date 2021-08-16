@@ -6,7 +6,7 @@ declare -A aliases=(
 	['2.7']='2'
 )
 
-defaultDebianSuite='buster'
+defaultDebianSuite='bullseye'
 
 self="$(basename "$BASH_SOURCE")"
 cd "$(dirname "$(readlink -f "$BASH_SOURCE")")"
