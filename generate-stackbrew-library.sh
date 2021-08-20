@@ -155,6 +155,10 @@ for version; do
 						) \
 						<(xargs -n1 <<<"$variantArches" | sort)
 				)"
+				if [[ "$v" != *buster ]]; then
+					# "pypy3: error while loading shared libraries: libffi.so.6: cannot open shared object file: No such file or directory"
+					variantArches="$(sed -r -e '/s390x/d' <<<"$variantArches")"
+				fi
 				;;
 		esac
 
