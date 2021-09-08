@@ -87,6 +87,8 @@ RUN $url = 'https://downloads.python.org/pypy/pypy3.7-v7.3.5-win64.zip'; \
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 20.3.4
+# https://github.com/docker-library/python/issues/365
+ENV PYTHON_SETUPTOOLS_VERSION 44.1.1
 # https://github.com/pypa/get-pip
 ENV PYTHON_GET_PIP_URL https://github.com/pypa/get-pip/raw/3843bff3a0a61da5b63ea0b7d34794c5c51a2f11/get-pip.py
 ENV PYTHON_GET_PIP_SHA256 95c5ee602b2f3cc50ae053d716c3c89bea62c58568f64d7d25924d399b2d5218
@@ -105,6 +107,7 @@ RUN Write-Host ('Downloading get-pip.py ({0}) ...' -f $env:PYTHON_GET_PIP_URL); 
 		--disable-pip-version-check \
 		--no-cache-dir \
 		('pip == {0}' -f $env:PYTHON_PIP_VERSION) \
+		('setuptools == {0}' -f $env:PYTHON_SETUPTOOLS_VERSION) \
 	; \
 	Remove-Item get-pip.py -Force; \
 	\
