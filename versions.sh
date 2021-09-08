@@ -27,20 +27,28 @@ fi
 versions=( "${versions[@]%/}" )
 
 pipVersion="$(
-	curl -fsSL 'https://pypi.org/pypi/pip/json' \
-		| jq -r '
-			.releases
-			| keys[]
-			# version 20.x is the last to support Python 2
-			| select(startswith("20."))
-		' \
-		| sort -rV \
-		| head -1
+	curl -fsSL 'https://pypi.org/pypi/pip/json' | jq -r '
+		.releases
+		| keys_unsorted
+		# version 20.x is the last to support Python 2
+		| map(select(startswith("20.") and (test("[^0-9.]") | not)))
+		| max_by(split(".") | map(tonumber))
+	'
+)"
+# https://github.com/docker-library/python/issues/365
+setuptoolsVersion="$(
+	curl -fsSL 'https://pypi.org/pypi/setuptools/json' | jq -r '
+		.releases
+		| keys_unsorted
+		# version 44.x is the last to support Python 2
+		| map(select(startswith("44.")))
+		| max_by(split(".") | map(tonumber))
+	'
 )"
 getPipCommit="$(curl -fsSL "https://github.com/pypa/get-pip/commits/$pipVersion/get-pip.py.atom" | tac|tac | awk -F '[[:space:]]*[<>/]+' '$2 == "id" && $3 ~ /Commit/ { print $4; exit }')"
 getPipUrl="https://github.com/pypa/get-pip/raw/$getPipCommit/get-pip.py"
 getPipSha256="$(curl -fsSL "$getPipUrl" | sha256sum | cut -d' ' -f1)"
-export pipVersion getPipCommit getPipUrl getPipSha256
+export pipVersion setuptoolsVersion getPipCommit getPipUrl getPipSha256
 
 sha256s="$(curl -fsSL --compressed 'https://www.pypy.org/checksums.html')"
 pypy_tarball() {
@@ -106,6 +114,7 @@ for version in "${versions[@]}"; do
 				},
 			},
 			pip: { version: env.pipVersion },
+			setuptools: { version: env.setuptoolsVersion },
 			"get-pip": {
 				version: env.getPipCommit,
 				sha256: env.getPipSha256,
