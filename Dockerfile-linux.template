@@ -130,10 +130,6 @@ RUN set -eux; \
 			\( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
 		\) -exec rm -rf '{}' +
 
-# if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION {{ .pip.version }}
-# https://github.com/docker-library/python/issues/365
-ENV PYTHON_SETUPTOOLS_VERSION {{ .setuptools.version }}
 # https://github.com/pypa/get-pip
 ENV PYTHON_GET_PIP_URL {{ ."get-pip".url }}
 ENV PYTHON_GET_PIP_SHA256 {{ ."get-pip".sha256 }}
@@ -148,11 +144,14 @@ RUN set -ex; \
 	wget -O get-pip.py "$PYTHON_GET_PIP_URL"; \
 	echo "$PYTHON_GET_PIP_SHA256 *get-pip.py" | sha256sum --check --strict -; \
 	\
+	pipVersion="$({{ cmd }} -c 'import ensurepip; print(ensurepip._PIP_VERSION)')"; \
+	setuptoolsVersion="$({{ cmd }} -c 'import ensurepip; print(ensurepip._SETUPTOOLS_VERSION)')"; \
+	\
 	{{ cmd }} get-pip.py \
 		--disable-pip-version-check \
 		--no-cache-dir \
-		"pip == $PYTHON_PIP_VERSION" \
-		"setuptools == $PYTHON_SETUPTOOLS_VERSION" \
+		"pip == $pipVersion" \
+		"setuptools == $setuptoolsVersion" \
 	; \
 {{ if is_slim then ( -}}
 	apt-get purge -y --auto-remove wget; \

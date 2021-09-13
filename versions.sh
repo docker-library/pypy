@@ -26,30 +26,6 @@ else
 fi
 versions=( "${versions[@]%/}" )
 
-pipVersion="$(
-	curl -fsSL 'https://pypi.org/pypi/pip/json' | jq -r '
-		.releases
-		| keys_unsorted
-		# version 20.x is the last to support Python 2
-		| map(select(startswith("20.") and (test("[^0-9.]") | not)))
-		| max_by(split(".") | map(tonumber))
-	'
-)"
-# https://github.com/docker-library/python/issues/365
-setuptoolsVersion="$(
-	curl -fsSL 'https://pypi.org/pypi/setuptools/json' | jq -r '
-		.releases
-		| keys_unsorted
-		# version 44.x is the last to support Python 2
-		| map(select(startswith("44.")))
-		| max_by(split(".") | map(tonumber))
-	'
-)"
-getPipCommit="$(curl -fsSL "https://github.com/pypa/get-pip/commits/$pipVersion/get-pip.py.atom" | tac|tac | awk -F '[[:space:]]*[<>/]+' '$2 == "id" && $3 ~ /Commit/ { print $4; exit }')"
-getPipUrl="https://github.com/pypa/get-pip/raw/$getPipCommit/get-pip.py"
-getPipSha256="$(curl -fsSL "$getPipUrl" | sha256sum | cut -d' ' -f1)"
-export pipVersion setuptoolsVersion getPipCommit getPipUrl getPipSha256
-
 sha256s="$(curl -fsSL --compressed 'https://www.pypy.org/checksums.html')"
 pypy_tarball() {
 	local pypy="$1"; shift
@@ -113,12 +89,12 @@ for version in "${versions[@]}"; do
 					url: ("https://downloads.python.org/pypy/" + env.tarball),
 				},
 			},
-			pip: { version: env.pipVersion },
-			setuptools: { version: env.setuptoolsVersion },
 			"get-pip": {
-				version: env.getPipCommit,
-				sha256: env.getPipSha256,
-				url: env.getPipUrl,
+				# https://github.com/pypa/get-pip/releases/tag/20.3.4 (the last release to support Python 2)
+				version: "3843bff3a0a61da5b63ea0b7d34794c5c51a2f11",
+				url: "https://github.com/pypa/get-pip/raw/3843bff3a0a61da5b63ea0b7d34794c5c51a2f11/get-pip.py",
+				sha256: "95c5ee602b2f3cc50ae053d716c3c89bea62c58568f64d7d25924d399b2d5218",
+				# TODO use a newer commit for Python 3
 			},
 		}
 	')"
