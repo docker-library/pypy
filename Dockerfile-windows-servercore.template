@@ -86,10 +86,6 @@ RUN $url = '{{ .arches["windows-amd64"].url }}'; \
 	\
 	Write-Host 'Complete.'
 
-# if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION {{ .pip.version }}
-# https://github.com/docker-library/python/issues/365
-ENV PYTHON_SETUPTOOLS_VERSION {{ .setuptools.version }}
 # https://github.com/pypa/get-pip
 ENV PYTHON_GET_PIP_URL {{ ."get-pip".url }}
 ENV PYTHON_GET_PIP_SHA256 {{ ."get-pip".sha256 }}
@@ -103,12 +99,15 @@ RUN Write-Host ('Downloading get-pip.py ({0}) ...' -f $env:PYTHON_GET_PIP_URL); 
 		exit 1; \
 	}; \
 	\
-	Write-Host ('Installing "pip == {0}" ...' -f $env:PYTHON_PIP_VERSION); \
+	$pipVersion = & {{ cmd }} -c 'import ensurepip; print(ensurepip._PIP_VERSION)'; \
+	$setuptoolsVersion = & {{ cmd }} -c 'import ensurepip; print(ensurepip._SETUPTOOLS_VERSION)'; \
+	\
+	Write-Host ('Installing "pip == {0}", "setuptools == {1}" ...' -f $pipVersion, $setuptoolsVersion); \
 	{{ cmd }} get-pip.py \
 		--disable-pip-version-check \
 		--no-cache-dir \
-		('pip == {0}' -f $env:PYTHON_PIP_VERSION) \
-		('setuptools == {0}' -f $env:PYTHON_SETUPTOOLS_VERSION) \
+		('pip == {0}' -f $pipVersion) \
+		('setuptools == {0}' -f $setuptoolsVersion) \
 	; \
 	Remove-Item get-pip.py -Force; \
 	\

@@ -23,12 +23,6 @@
       "url": "https://github.com/pypa/get-pip/raw/3843bff3a0a61da5b63ea0b7d34794c5c51a2f11/get-pip.py",
       "version": "3843bff3a0a61da5b63ea0b7d34794c5c51a2f11"
     },
-    "pip": {
-      "version": "20.3.4"
-    },
-    "setuptools": {
-      "version": "44.1.1"
-    },
     "variants": [
       "bullseye",
       "slim-bullseye",
@@ -65,12 +59,6 @@
       "sha256": "95c5ee602b2f3cc50ae053d716c3c89bea62c58568f64d7d25924d399b2d5218",
       "url": "https://github.com/pypa/get-pip/raw/3843bff3a0a61da5b63ea0b7d34794c5c51a2f11/get-pip.py",
       "version": "3843bff3a0a61da5b63ea0b7d34794c5c51a2f11"
-    },
-    "pip": {
-      "version": "20.3.4"
-    },
-    "setuptools": {
-      "version": "44.1.1"
     },
     "variants": [
       "bullseye",
