@@ -68,5 +68,42 @@
       "windows/windowsservercore-1809"
     ],
     "version": "7.3.7"
+  },
+  "3.8": {
+    "arches": {
+      "amd64": {
+        "sha256": "5dee37c7c3cb8b160028fbde3a5901c68043dfa545a16794502b897d4bc40d7e",
+        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.7-linux64.tar.bz2"
+      },
+      "arm64v8": {
+        "sha256": "cbd44e0a9146b3c03a9d14b265774a848f387ed846316c3e984847e278d0efd3",
+        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.7-aarch64.tar.bz2"
+      },
+      "i386": {
+        "sha256": "dfb9d005f0fc917edc60fd618143e4934c412f9168b55166f5519ba0a3b1a835",
+        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.7-linux32.tar.bz2"
+      },
+      "s390x": {
+        "sha256": "ae7d6a76490b317a74b87788d596610c7ffd0ae2d3ffa2433d5bb5300f6b4b77",
+        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.7-s390x.tar.bz2"
+      },
+      "windows-amd64": {
+        "sha256": "8ceb03d2f7b73c6ce0758290bc42ba366a45c46e033eda36f1779d957a905735",
+        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.7-win64.zip"
+      }
+    },
+    "get-pip": {
+      "sha256": "95c5ee602b2f3cc50ae053d716c3c89bea62c58568f64d7d25924d399b2d5218",
+      "url": "https://github.com/pypa/get-pip/raw/3843bff3a0a61da5b63ea0b7d34794c5c51a2f11/get-pip.py",
+      "version": "3843bff3a0a61da5b63ea0b7d34794c5c51a2f11"
+    },
+    "variants": [
+      "bullseye",
+      "slim-bullseye",
+      "buster",
+      "slim-buster",
+      "windows/windowsservercore-1809"
+    ],
+    "version": "7.3.7"
   }
 }
