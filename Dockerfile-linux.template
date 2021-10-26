@@ -1,6 +1,31 @@
-{{ def is_slim: env.variant | startswith("slim-") -}}
-{{ def is_3: env.version | startswith("3") -}}
-{{ def cmd: if is_3 then "pypy3" else "pypy" end -}}
+{{
+	def is_slim:
+		env.variant
+		| startswith("slim-")
+	;
+	def is_3:
+		env.version
+		| startswith("3")
+	;
+	def minor:
+		env.version
+		| split(".")[1]
+		| tonumber
+	;
+	def lib_pypy:
+		if is_3 and minor >= 8 then
+			"/opt/pypy/lib/pypy" + env.version
+		else
+			"/opt/pypy/lib_pypy"
+		end
+	;
+	def cmd:
+		if is_3 then
+			"pypy3"
+		else
+			"pypy"
+		end
+-}}
 {{ if is_slim then ( -}}
 FROM debian:{{ env.variant | ltrimstr("slim-") }}-slim
 
@@ -70,9 +95,11 @@ RUN set -eux; \
 		bzip2 \
 		wget \
 {{ ) else "" end -}}
-# sometimes "{{ cmd }}" itself is linked against libexpat1 / libncurses5, sometimes they're ".so" files in "/opt/pypy/lib_pypy"
+# sometimes "{{ cmd }}" itself is linked against libexpat1 / libncurses5, sometimes they're ".so" files in "{{ lib_pypy }}"
 		libexpat1 \
 		libncurses5 \
+		libncursesw6 \
+		libsqlite3-0 \
 # (so we'll add them temporarily, then use "ldd" later to determine which to keep based on usage per architecture)
 	; \
 	\
@@ -80,7 +107,7 @@ RUN set -eux; \
 	echo "$sha256 *pypy.tar.bz2" | sha256sum --check --strict -; \
 	mkdir /opt/pypy; \
 	tar -xjC /opt/pypy --strip-components=1 -f pypy.tar.bz2; \
-	find /opt/pypy/lib-python -depth -type d -a \( -name test -o -name tests \) -exec rm -rf '{}' +; \
+	find /opt/pypy/lib* -depth -type d -a \( -name test -o -name tests \) -exec rm -rf '{}' +; \
 	rm pypy.tar.bz2; \
 	\
 	ln -sv {{ "/opt/pypy/bin/" + cmd | @sh }} /usr/local/bin/; \
@@ -90,7 +117,13 @@ RUN set -eux; \
 	\
 {{ if is_3 then ( -}}
 # on pypy3, rebuild ffi bits for compatibility with Debian Stretch+
-	cd /opt/pypy/lib_pypy; \
+	cd {{ lib_pypy }}; \
+	if [ -f _gdbm_build.py ]; then \
+{{ if is_slim then ( -}}
+		apt-get install -y --no-install-recommends gcc libc6-dev libgdbm-dev; \
+{{ ) else "" end -}}
+		{{ cmd }} _gdbm_build.py; \
+	fi; \
 # https://github.com/docker-library/pypy/issues/24#issuecomment-409408657
 	if [ -f _ssl_build.py ]; then \
 {{ if is_slim then ( -}}

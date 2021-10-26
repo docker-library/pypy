@@ -4,7 +4,7 @@
 # PLEASE DO NOT EDIT IT DIRECTLY.
 #
 
-FROM buildpack-deps:bullseye
+FROM buildpack-deps:buster
 
 # runtime dependencies
 RUN set -eux; \
@@ -29,20 +29,20 @@ RUN set -eux; \
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
 		'amd64') \
-			url='https://downloads.python.org/pypy/pypy3.7-v7.3.7-linux64.tar.bz2'; \
-			sha256='8332f923755441fedfe4767a84601c94f4d6f8475384406cb5f259ad8d0b2002'; \
+			url='https://downloads.python.org/pypy/pypy3.8-v7.3.7-linux64.tar.bz2'; \
+			sha256='5dee37c7c3cb8b160028fbde3a5901c68043dfa545a16794502b897d4bc40d7e'; \
 			;; \
 		'arm64') \
-			url='https://downloads.python.org/pypy/pypy3.7-v7.3.7-aarch64.tar.bz2'; \
-			sha256='a1a84882525dd574c4b051b66e9b7ef0e132392acc2f729420d7825f96835216'; \
+			url='https://downloads.python.org/pypy/pypy3.8-v7.3.7-aarch64.tar.bz2'; \
+			sha256='cbd44e0a9146b3c03a9d14b265774a848f387ed846316c3e984847e278d0efd3'; \
 			;; \
 		'i386') \
-			url='https://downloads.python.org/pypy/pypy3.7-v7.3.7-linux32.tar.bz2'; \
-			sha256='0ab9e2e8ae1ac463bb811b9d3ba24d138f41f7378c17ca9e2d8dee51bf151d19'; \
+			url='https://downloads.python.org/pypy/pypy3.8-v7.3.7-linux32.tar.bz2'; \
+			sha256='dfb9d005f0fc917edc60fd618143e4934c412f9168b55166f5519ba0a3b1a835'; \
 			;; \
 		's390x') \
-			url='https://downloads.python.org/pypy/pypy3.7-v7.3.7-s390x.tar.bz2'; \
-			sha256='7f91efc65a69e727519cc885ca6351f4bfdd6b90580dced2fdcc9ae1bf10013b'; \
+			url='https://downloads.python.org/pypy/pypy3.8-v7.3.7-s390x.tar.bz2'; \
+			sha256='ae7d6a76490b317a74b87788d596610c7ffd0ae2d3ffa2433d5bb5300f6b4b77'; \
 			;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
@@ -50,7 +50,7 @@ RUN set -eux; \
 	savedAptMark="$(apt-mark showmanual)"; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
-# sometimes "pypy3" itself is linked against libexpat1 / libncurses5, sometimes they're ".so" files in "/opt/pypy/lib_pypy"
+# sometimes "pypy3" itself is linked against libexpat1 / libncurses5, sometimes they're ".so" files in "/opt/pypy/lib/pypy3.8"
 		libexpat1 \
 		libncurses5 \
 		libncursesw6 \
@@ -71,7 +71,7 @@ RUN set -eux; \
 	pypy3 --version; \
 	\
 # on pypy3, rebuild ffi bits for compatibility with Debian Stretch+
-	cd /opt/pypy/lib_pypy; \
+	cd /opt/pypy/lib/pypy3.8; \
 	if [ -f _gdbm_build.py ]; then \
 		pypy3 _gdbm_build.py; \
 	fi; \

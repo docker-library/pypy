@@ -51,6 +51,8 @@ RUN set -eux; \
 # sometimes "pypy3" itself is linked against libexpat1 / libncurses5, sometimes they're ".so" files in "/opt/pypy/lib_pypy"
 		libexpat1 \
 		libncurses5 \
+		libncursesw6 \
+		libsqlite3-0 \
 # (so we'll add them temporarily, then use "ldd" later to determine which to keep based on usage per architecture)
 	; \
 	\
@@ -58,7 +60,7 @@ RUN set -eux; \
 	echo "$sha256 *pypy.tar.bz2" | sha256sum --check --strict -; \
 	mkdir /opt/pypy; \
 	tar -xjC /opt/pypy --strip-components=1 -f pypy.tar.bz2; \
-	find /opt/pypy/lib-python -depth -type d -a \( -name test -o -name tests \) -exec rm -rf '{}' +; \
+	find /opt/pypy/lib* -depth -type d -a \( -name test -o -name tests \) -exec rm -rf '{}' +; \
 	rm pypy.tar.bz2; \
 	\
 	ln -sv '/opt/pypy/bin/pypy3' /usr/local/bin/; \
@@ -68,6 +70,10 @@ RUN set -eux; \
 	\
 # on pypy3, rebuild ffi bits for compatibility with Debian Stretch+
 	cd /opt/pypy/lib_pypy; \
+	if [ -f _gdbm_build.py ]; then \
+		apt-get install -y --no-install-recommends gcc libc6-dev libgdbm-dev; \
+		pypy3 _gdbm_build.py; \
+	fi; \
 # https://github.com/docker-library/pypy/issues/24#issuecomment-409408657
 	if [ -f _ssl_build.py ]; then \
 		apt-get install -y --no-install-recommends gcc libc6-dev libssl-dev; \
