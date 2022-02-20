@@ -44,13 +44,13 @@ RUN $url = 'https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81C
 	\
 	Write-Host 'Complete.'
 
-ENV PYPY_VERSION 7.3.7
+ENV PYPY_VERSION 7.3.8
 
-RUN $url = 'https://downloads.python.org/pypy/pypy3.7-v7.3.7-win64.zip'; \
+RUN $url = 'https://downloads.python.org/pypy/pypy3.7-v7.3.8-win64.zip'; \
 	Write-Host ('Downloading {0} ...' -f $url); \
 	Invoke-WebRequest -Uri $url -OutFile 'pypy.zip'; \
 	\
-	$sha256 = '53505dc0b57590290efd7656117ee5384bcd036f7f7c4f0bc3f5cd10299037d1'; \
+	$sha256 = '96df67492bc8d62b2e71dddf5f6c58965a26cac9799c5f4081401af0494b3bcc'; \
 	Write-Host ('Verifying sha256 ({0}) ...' -f $sha256); \
 	if ((Get-FileHash pypy.zip -Algorithm sha256).Hash -ne $sha256) { \
 		Write-Host 'FAILED!'; \
@@ -64,7 +64,7 @@ RUN $url = 'https://downloads.python.org/pypy/pypy3.7-v7.3.7-win64.zip'; \
 	Remove-Item pypy.zip -Force; \
 	\
 	Write-Host 'Renaming ...'; \
-	Rename-Item -Path C:\pypy3.7-v7.3.7-win64 -NewName C:\pypy; \
+	Rename-Item -Path C:\pypy3.7-v7.3.8-win64 -NewName C:\pypy; \
 	\
 	Write-Host 'Verifying install ("pypy3 --version") ...'; \
 	pypy3 --version; \
