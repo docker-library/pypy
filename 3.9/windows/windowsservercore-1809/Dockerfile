@@ -1,15 +1,14 @@
-{{ def is_3: env.version | startswith("3") -}}
-{{ def cmd: if [ "3.7", "3.8" ] | index(env.version) then "pypy3" else "pypy" end -}}
-FROM mcr.microsoft.com/windows/{{ env.windowsVariant }}:{{ env.windowsRelease }}
+#
+# NOTE: THIS DOCKERFILE IS GENERATED VIA "apply-templates.sh"
+#
+# PLEASE DO NOT EDIT IT DIRECTLY.
+#
+
+FROM mcr.microsoft.com/windows/servercore:1809
 
 # $ProgressPreference: https://github.com/PowerShell/PowerShell/issues/2138#issuecomment-251261324
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
-{{ if is_3 then "" else ( -}}
-# https://github.com/docker-library/python/issues/147
-ENV PYTHONIOENCODING UTF-8
-
-{{ ) end -}}
 # PATH isn't actually set in the Docker image, so we have to set it from within the container
 RUN $newPath = ('C:\pypy;C:\pypy\Scripts;{0}' -f $env:PATH); \
 	Write-Host ('Updating PATH: {0}' -f $newPath); \
@@ -45,13 +44,13 @@ RUN $url = 'https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81C
 	\
 	Write-Host 'Complete.'
 
-ENV PYPY_VERSION {{ .version }}
+ENV PYPY_VERSION 7.3.8
 
-RUN $url = '{{ .arches["windows-amd64"].url }}'; \
+RUN $url = 'https://downloads.python.org/pypy/pypy3.9-v7.3.8-win64.zip'; \
 	Write-Host ('Downloading {0} ...' -f $url); \
 	Invoke-WebRequest -Uri $url -OutFile 'pypy.zip'; \
 	\
-	$sha256 = '{{ .arches["windows-amd64"].sha256 }}'; \
+	$sha256 = 'c1b2e4cde2dcd1208d41ef7b7df8e5c90564a521e7a5db431673da335a1ba697'; \
 	Write-Host ('Verifying sha256 ({0}) ...' -f $sha256); \
 	if ((Get-FileHash pypy.zip -Algorithm sha256).Hash -ne $sha256) { \
 		Write-Host 'FAILED!'; \
@@ -65,10 +64,10 @@ RUN $url = '{{ .arches["windows-amd64"].url }}'; \
 	Remove-Item pypy.zip -Force; \
 	\
 	Write-Host 'Renaming ...'; \
-	Rename-Item -Path C:\{{ .arches["windows-amd64"].url | rtrimstr(".zip") | split("/")[-1] }} -NewName C:\pypy; \
+	Rename-Item -Path C:\pypy3.9-v7.3.8-win64 -NewName C:\pypy; \
 	\
-	Write-Host 'Verifying install ("{{ cmd }} --version") ...'; \
-	{{ cmd }} --version; \
+	Write-Host 'Verifying install ("pypy --version") ...'; \
+	pypy --version; \
 	\
 	Write-Host 'Cleanup install ...'; \
 	Get-ChildItem \
@@ -87,8 +86,8 @@ RUN $url = '{{ .arches["windows-amd64"].url }}'; \
 	Write-Host 'Complete.'
 
 # https://github.com/pypa/get-pip
-ENV PYTHON_GET_PIP_URL {{ ."get-pip".url }}
-ENV PYTHON_GET_PIP_SHA256 {{ ."get-pip".sha256 }}
+ENV PYTHON_GET_PIP_URL https://github.com/pypa/get-pip/raw/3843bff3a0a61da5b63ea0b7d34794c5c51a2f11/get-pip.py
+ENV PYTHON_GET_PIP_SHA256 95c5ee602b2f3cc50ae053d716c3c89bea62c58568f64d7d25924d399b2d5218
 
 RUN Write-Host ('Downloading get-pip.py ({0}) ...' -f $env:PYTHON_GET_PIP_URL); \
 	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; \
@@ -99,11 +98,11 @@ RUN Write-Host ('Downloading get-pip.py ({0}) ...' -f $env:PYTHON_GET_PIP_URL); 
 		exit 1; \
 	}; \
 	\
-	$pipVersion = & {{ cmd }} -c 'import ensurepip; print(ensurepip._PIP_VERSION)'; \
-	$setuptoolsVersion = & {{ cmd }} -c 'import ensurepip; print(ensurepip._SETUPTOOLS_VERSION)'; \
+	$pipVersion = & pypy -c 'import ensurepip; print(ensurepip._PIP_VERSION)'; \
+	$setuptoolsVersion = & pypy -c 'import ensurepip; print(ensurepip._SETUPTOOLS_VERSION)'; \
 	\
 	Write-Host ('Installing "pip == {0}", "setuptools == {1}" ...' -f $pipVersion, $setuptoolsVersion); \
-	{{ cmd }} get-pip.py \
+	pypy get-pip.py \
 		--disable-pip-version-check \
 		--no-cache-dir \
 		('pip == {0}' -f $pipVersion) \
@@ -130,4 +129,4 @@ RUN Write-Host ('Downloading get-pip.py ({0}) ...' -f $env:PYTHON_GET_PIP_URL); 
 	\
 	Write-Host 'Complete.'
 
-CMD {{ [ cmd ] | @json }}
+CMD ["pypy"]
