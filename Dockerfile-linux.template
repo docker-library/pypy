@@ -138,6 +138,13 @@ RUN set -eux; \
 {{ ) else "" end -}}
 		{{ cmd }} _lzma_build.py; \
 	fi; \
+# https://github.com/docker-library/pypy/issues/68
+	if [ -f _sqlite3_build.py ]; then \
+{{ if is_slim then ( -}}
+		apt-get install -y --no-install-recommends gcc libc6-dev libsqlite3-dev; \
+{{ ) else "" end -}}
+		{{ cmd }} _sqlite3_build.py; \
+	fi; \
 # TODO rebuild other cffi modules here too? (other _*_build.py files)
 	\
 {{ ) else "" end -}}
