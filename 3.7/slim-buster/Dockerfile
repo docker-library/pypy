@@ -68,8 +68,8 @@ RUN set -eux; \
 # smoke test
 	pypy3 --version; \
 	\
-# on pypy3, rebuild ffi bits for compatibility with Debian Stretch+
 	cd /opt/pypy/lib_pypy; \
+# on pypy3, rebuild gdbm ffi bits for compatibility with Debian Stretch+
 	if [ -f _gdbm_build.py ]; then \
 		apt-get install -y --no-install-recommends gcc libc6-dev libgdbm-dev; \
 		pypy3 _gdbm_build.py; \

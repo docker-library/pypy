@@ -70,8 +70,8 @@ RUN set -eux; \
 # smoke test
 	pypy3 --version; \
 	\
-# on pypy3, rebuild ffi bits for compatibility with Debian Stretch+
 	cd /opt/pypy/lib/pypy3.9; \
+# on pypy3, rebuild gdbm ffi bits for compatibility with Debian Stretch+
 	if [ -f _gdbm_build.py ]; then \
 		pypy3 _gdbm_build.py; \
 	fi; \

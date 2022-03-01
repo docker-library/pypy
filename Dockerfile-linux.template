@@ -116,35 +116,40 @@ RUN set -eux; \
 	{{ cmd }} --version; \
 	\
 {{ if is_3 then ( -}}
-# on pypy3, rebuild ffi bits for compatibility with Debian Stretch+
 	cd {{ lib_pypy }}; \
-	if [ -f _gdbm_build.py ]; then \
+{{
+	[
+		{
+			comment: "on pypy3, rebuild gdbm ffi bits for compatibility with Debian Stretch+",
+			file: "_gdbm_build.py",
+			deps: "libgdbm-dev",
+		},
+		{
+			comment: "https://github.com/docker-library/pypy/issues/24#issuecomment-409408657",
+			file: "_ssl_build.py",
+			deps: "libssl-dev",
+		},
+		{
+			comment: "https://github.com/docker-library/pypy/issues/42",
+			file: "_lzma_build.py",
+			deps: "liblzma-dev",
+		},
+		{
+			comment: "https://github.com/docker-library/pypy/issues/68",
+			file: "_sqlite3_build.py",
+			deps: "libsqlite3-dev",
+		},
+		empty # trailing comma hack
+	] | map(
+-}}
+# {{ .comment }}
+	if [ -f {{ .file }} ]; then \
 {{ if is_slim then ( -}}
-		apt-get install -y --no-install-recommends gcc libc6-dev libgdbm-dev; \
+		apt-get install -y --no-install-recommends gcc libc6-dev {{ .deps }}; \
 {{ ) else "" end -}}
-		{{ cmd }} _gdbm_build.py; \
+		{{ cmd }} {{ .file }}; \
 	fi; \
-# https://github.com/docker-library/pypy/issues/24#issuecomment-409408657
-	if [ -f _ssl_build.py ]; then \
-{{ if is_slim then ( -}}
-		apt-get install -y --no-install-recommends gcc libc6-dev libssl-dev; \
-{{ ) else "" end -}}
-		{{ cmd }} _ssl_build.py; \
-	fi; \
-# https://github.com/docker-library/pypy/issues/42
-	if [ -f _lzma_build.py ]; then \
-{{ if is_slim then ( -}}
-		apt-get install -y --no-install-recommends gcc libc6-dev liblzma-dev; \
-{{ ) else "" end -}}
-		{{ cmd }} _lzma_build.py; \
-	fi; \
-# https://github.com/docker-library/pypy/issues/68
-	if [ -f _sqlite3_build.py ]; then \
-{{ if is_slim then ( -}}
-		apt-get install -y --no-install-recommends gcc libc6-dev libsqlite3-dev; \
-{{ ) else "" end -}}
-		{{ cmd }} _sqlite3_build.py; \
-	fi; \
+{{ ) | join("") -}}
 # TODO rebuild other cffi modules here too? (other _*_build.py files)
 	\
 {{ ) else "" end -}}
