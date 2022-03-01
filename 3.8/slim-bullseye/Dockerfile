@@ -68,8 +68,8 @@ RUN set -eux; \
 # smoke test
 	pypy3 --version; \
 	\
-# on pypy3, rebuild ffi bits for compatibility with Debian Stretch+
 	cd /opt/pypy/lib/pypy3.8; \
+# on pypy3, rebuild gdbm ffi bits for compatibility with Debian Stretch+
 	if [ -f _gdbm_build.py ]; then \
 		apt-get install -y --no-install-recommends gcc libc6-dev libgdbm-dev; \
 		pypy3 _gdbm_build.py; \
@@ -83,6 +83,11 @@ RUN set -eux; \
 	if [ -f _lzma_build.py ]; then \
 		apt-get install -y --no-install-recommends gcc libc6-dev liblzma-dev; \
 		pypy3 _lzma_build.py; \
+	fi; \
+# https://github.com/docker-library/pypy/issues/68
+	if [ -f _sqlite3_build.py ]; then \
+		apt-get install -y --no-install-recommends gcc libc6-dev libsqlite3-dev; \
+		pypy3 _sqlite3_build.py; \
 	fi; \
 # TODO rebuild other cffi modules here too? (other _*_build.py files)
 	\
