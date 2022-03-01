@@ -157,8 +157,10 @@ for version; do
 				)"
 				if [[ "$v" != *buster ]]; then
 					# "pypy3: error while loading shared libraries: libffi.so.6: cannot open shared object file: No such file or directory"
-					variantArches="$(sed -r -e '/s390x/d' <<<"$variantArches")"
+					variantArches="$(sed -r -e '/^s390x$/d' <<<"$variantArches")"
 				fi
+				# arm64 has the libffi.so.6 issue plus "pypy: error while loading shared libraries: libtinfow.so.6: cannot open shared object file: No such file or directory" (so everything fails)
+				variantArches="$(sed -r -e '/^arm64v8$/d' <<<"$variantArches")"
 				;;
 		esac
 
