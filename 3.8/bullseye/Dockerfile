@@ -22,6 +22,7 @@ ENV LANG C.UTF-8
 # ensure local pypy3 is preferred over distribution pypy3
 ENV PATH /opt/pypy/bin:$PATH
 
+# Python 3.8.12
 ENV PYPY_VERSION 7.3.8
 
 RUN set -eux; \
@@ -33,8 +34,8 @@ RUN set -eux; \
 			sha256='089f8e3e357d6130815964ddd3507c13bd53e4976ccf0a89b5c36a9a6775a188'; \
 			;; \
 		'arm64') \
-			url='https://downloads.python.org/pypy/pypy3.8-v7.3.8-aarch64.tar.bz2'; \
-			sha256='fe41df391f87239925e573e195e631a9d03d37f471eb1479790ee13ca47a28af'; \
+			url='https://downloads.python.org/pypy/pypy3.8-v7.3.8-aarch64-portable.tar.bz2'; \
+			sha256='0210536e9f1841ba283c13b04783394050837bb3e6f4091c9f1bd9c7f2b94b55'; \
 			;; \
 		'i386') \
 			url='https://downloads.python.org/pypy/pypy3.8-v7.3.8-linux32.tar.bz2'; \

@@ -22,6 +22,7 @@ ENV LANG C.UTF-8
 # ensure local pypy is preferred over distribution pypy
 ENV PATH /opt/pypy/bin:$PATH
 
+# Python 2.7.18
 ENV PYPY_VERSION 7.3.8
 
 RUN set -eux; \
@@ -33,12 +34,16 @@ RUN set -eux; \
 			sha256='1f2e84fb539ffce233c34769d2f11647955f894be091e85419e05f48011e8940'; \
 			;; \
 		'arm64') \
-			url='https://downloads.python.org/pypy/pypy2.7-v7.3.8-aarch64.tar.bz2'; \
-			sha256='ca1f8d3146c83002ee97615906b0930e821297dcce3063b5b28933a0690ef298'; \
+			url='https://downloads.python.org/pypy/pypy2.7-v7.3.8-aarch64-portable.tar.bz2'; \
+			sha256='b5edfc995d83feea8b4c8aeffccb89753b4b182f076126550bd07cc35faa6208'; \
 			;; \
 		'i386') \
 			url='https://downloads.python.org/pypy/pypy2.7-v7.3.8-linux32.tar.bz2'; \
 			sha256='7c84f173bbcd73d0eb10909259d11b5cc253d4c6ea4492e6da8f2532df9b3da5'; \
+			;; \
+		's390x') \
+			url='https://downloads.python.org/pypy/pypy2.7-v7.3.8-s390x.tar.bz2'; \
+			sha256='b4ae4e708ba84602d976ad6ae391ef2eef4b1896d831b8f2b2ec69927dd92014'; \
 			;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \

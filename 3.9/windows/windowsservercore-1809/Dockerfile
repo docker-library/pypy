@@ -44,6 +44,7 @@ RUN $url = 'https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81C
 	\
 	Write-Host 'Complete.'
 
+# Python 3.9.10
 ENV PYPY_VERSION 7.3.8
 
 RUN $url = 'https://downloads.python.org/pypy/pypy3.9-v7.3.8-win64.zip'; \

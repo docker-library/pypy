@@ -6,12 +6,20 @@
         "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.8-linux64.tar.bz2"
       },
       "arm64v8": {
-        "sha256": "ca1f8d3146c83002ee97615906b0930e821297dcce3063b5b28933a0690ef298",
-        "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.8-aarch64.tar.bz2"
+        "sha256": "b5edfc995d83feea8b4c8aeffccb89753b4b182f076126550bd07cc35faa6208",
+        "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.8-aarch64-portable.tar.bz2"
+      },
+      "darwin-amd64": {
+        "sha256": "e5c1ff39ad9916ea23e3deb8012fe42367b6b19284cf13b1a1ea2b2f53a43add",
+        "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.8-osx64.tar.bz2"
       },
       "i386": {
         "sha256": "7c84f173bbcd73d0eb10909259d11b5cc253d4c6ea4492e6da8f2532df9b3da5",
         "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.8-linux32.tar.bz2"
+      },
+      "s390x": {
+        "sha256": "b4ae4e708ba84602d976ad6ae391ef2eef4b1896d831b8f2b2ec69927dd92014",
+        "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.8-s390x.tar.bz2"
       },
       "windows-amd64": {
         "sha256": "806a29a6c5550b1e669d8870683d3379138d3d43eb1e07bdf26d65a0691265f2",
@@ -22,6 +30,10 @@
       "sha256": "95c5ee602b2f3cc50ae053d716c3c89bea62c58568f64d7d25924d399b2d5218",
       "url": "https://github.com/pypa/get-pip/raw/3843bff3a0a61da5b63ea0b7d34794c5c51a2f11/get-pip.py",
       "version": "3843bff3a0a61da5b63ea0b7d34794c5c51a2f11"
+    },
+    "python": {
+      "major": "2.7",
+      "version": "2.7.18"
     },
     "variants": [
       "bullseye",
@@ -39,8 +51,12 @@
         "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.8-linux64.tar.bz2"
       },
       "arm64v8": {
-        "sha256": "4fb2f8281f3aaca72e6fe62ecc5fc054fcc79cd061ca3e0eea730f7d82d610d4",
-        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.8-aarch64.tar.bz2"
+        "sha256": "639c76f128a856747aee23a34276fa101a7a157ea81e76394fbaf80b97dcf2f2",
+        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.8-aarch64-portable.tar.bz2"
+      },
+      "darwin-amd64": {
+        "sha256": "76b8eef5b059a7e478f525615482d2a6e9feb83375e3f63c16381d80521a693f",
+        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.8-osx64.tar.bz2"
       },
       "i386": {
         "sha256": "38429ec6ea1aca391821ee4fbda7358ae86de4600146643f2af2fe2c085af839",
@@ -60,6 +76,10 @@
       "url": "https://github.com/pypa/get-pip/raw/3843bff3a0a61da5b63ea0b7d34794c5c51a2f11/get-pip.py",
       "version": "3843bff3a0a61da5b63ea0b7d34794c5c51a2f11"
     },
+    "python": {
+      "major": "3.7",
+      "version": "3.7.12"
+    },
     "variants": [
       "bullseye",
       "slim-bullseye",
@@ -76,8 +96,12 @@
         "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.8-linux64.tar.bz2"
       },
       "arm64v8": {
-        "sha256": "fe41df391f87239925e573e195e631a9d03d37f471eb1479790ee13ca47a28af",
-        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.8-aarch64.tar.bz2"
+        "sha256": "0210536e9f1841ba283c13b04783394050837bb3e6f4091c9f1bd9c7f2b94b55",
+        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.8-aarch64-portable.tar.bz2"
+      },
+      "darwin-amd64": {
+        "sha256": "de1b283ff112d76395c0162a1cf11528e192bdc230ee3f1b237f7694c7518dee",
+        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.8-osx64.tar.bz2"
       },
       "i386": {
         "sha256": "bea4b275decd492af6462157d293dd6fcf08a949859f8aec0959537b40afd032",
@@ -97,6 +121,10 @@
       "url": "https://github.com/pypa/get-pip/raw/3843bff3a0a61da5b63ea0b7d34794c5c51a2f11/get-pip.py",
       "version": "3843bff3a0a61da5b63ea0b7d34794c5c51a2f11"
     },
+    "python": {
+      "major": "3.8",
+      "version": "3.8.12"
+    },
     "variants": [
       "bullseye",
       "slim-bullseye",
@@ -113,8 +141,12 @@
         "url": "https://downloads.python.org/pypy/pypy3.9-v7.3.8-linux64.tar.bz2"
       },
       "arm64v8": {
-        "sha256": "89d7ee12a8c416e83fae80af82482531fc6502321e75e5b7a0cc01d756ee5f0e",
-        "url": "https://downloads.python.org/pypy/pypy3.9-v7.3.8-aarch64.tar.bz2"
+        "sha256": "b7282bc4484bceae5bc4cc04e05ee4faf51cb624c8fc7a69d92e5fdf0d0c96aa",
+        "url": "https://downloads.python.org/pypy/pypy3.9-v7.3.8-aarch64-portable.tar.bz2"
+      },
+      "darwin-amd64": {
+        "sha256": "95bd88ac8d6372cd5b7b5393de7b7d5c615a0c6e42fdb1eb67f2d2d510965aee",
+        "url": "https://downloads.python.org/pypy/pypy3.9-v7.3.8-osx64.tar.bz2"
       },
       "i386": {
         "sha256": "a0d18e4e73cc655eb02354759178b8fb161d3e53b64297d05e2fff91f7cf862d",
@@ -133,6 +165,10 @@
       "sha256": "95c5ee602b2f3cc50ae053d716c3c89bea62c58568f64d7d25924d399b2d5218",
       "url": "https://github.com/pypa/get-pip/raw/3843bff3a0a61da5b63ea0b7d34794c5c51a2f11/get-pip.py",
       "version": "3843bff3a0a61da5b63ea0b7d34794c5c51a2f11"
+    },
+    "python": {
+      "major": "3.9",
+      "version": "3.9.10"
     },
     "variants": [
       "bullseye",
