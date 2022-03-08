@@ -45,6 +45,7 @@ RUN $url = 'https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81C
 	\
 	Write-Host 'Complete.'
 
+# Python {{ .python.version }}
 ENV PYPY_VERSION {{ .version }}
 
 RUN $url = '{{ .arches["windows-amd64"].url }}'; \

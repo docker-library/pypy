@@ -53,6 +53,7 @@ ENV LANG C.UTF-8
 # ensure local {{ cmd }} is preferred over distribution {{ cmd }}
 ENV PATH /opt/pypy/bin:$PATH
 
+# Python {{ .python.version }}
 ENV PYPY_VERSION {{ .version }}
 
 RUN set -eux; \
@@ -62,7 +63,7 @@ RUN set -eux; \
 {{
 	[
 		.arches | to_entries[]
-		| select(.key | startswith("windows-") | not)
+		| select(.key | index("-") | not)
 		| .key as $bashbrewArch
 		| (
 			{
