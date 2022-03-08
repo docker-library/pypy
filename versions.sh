@@ -111,12 +111,15 @@ for version in "${versions[@]}"; do
 			variants: [
 				(
 					"bullseye",
-					"buster"
+					"buster",
+					empty # trailing comma
 				| ., "slim-" + .),
 
 				if $doc.arches | keys | any(startswith("windows-")) then
 					(
-						"1809"
+						"ltsc2022",
+						"1809",
+						empty # trailing comma
 					| "windows/windowsservercore-" + .)
 				else empty end
 			],
