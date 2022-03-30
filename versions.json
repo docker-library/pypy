@@ -48,28 +48,28 @@
   "3.7": {
     "arches": {
       "amd64": {
-        "sha256": "409085db79a6d90bfcf4f576dca1538498e65937acfbe03bd4909bdc262ff378",
-        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.8-linux64.tar.bz2"
+        "sha256": "c58195124d807ecc527499ee19bc511ed753f4f2e418203ca51bc7e3b124d5d1",
+        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.9-linux64.tar.bz2"
       },
       "arm64v8": {
-        "sha256": "639c76f128a856747aee23a34276fa101a7a157ea81e76394fbaf80b97dcf2f2",
-        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.8-aarch64-portable.tar.bz2"
+        "sha256": "dfc62f2c453fb851d10a1879c6e75c31ffebbf2a44d181bb06fcac4750d023fc",
+        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.9-aarch64.tar.bz2"
       },
       "darwin-amd64": {
-        "sha256": "76b8eef5b059a7e478f525615482d2a6e9feb83375e3f63c16381d80521a693f",
-        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.8-osx64.tar.bz2"
+        "sha256": "12d92f578a200d50959e55074b20f29f93c538943e9a6e6522df1a1cc9cef542",
+        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.9-osx64.tar.bz2"
       },
       "i386": {
-        "sha256": "38429ec6ea1aca391821ee4fbda7358ae86de4600146643f2af2fe2c085af839",
-        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.8-linux32.tar.bz2"
+        "sha256": "3398cece0167b81baa219c9cd54a549443d8c0a6b553ec8ec13236281e0d86cd",
+        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.9-linux32.tar.bz2"
       },
       "s390x": {
-        "sha256": "5c2cd3f7cf04cb96f6bcc6b02e271f5d7275867763978e66651b8d1605ef3141",
-        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.8-s390x.tar.bz2"
+        "sha256": "fcab3b9e110379948217cf592229542f53c33bfe881006f95ce30ac815a6df48",
+        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.9-s390x.tar.bz2"
       },
       "windows-amd64": {
-        "sha256": "96df67492bc8d62b2e71dddf5f6c58965a26cac9799c5f4081401af0494b3bcc",
-        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.8-win64.zip"
+        "sha256": "8acb184b48fb3c854de0662e4d23a66b90e73b1ab73a86695022c12c745d8b00",
+        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.9-win64.zip"
       }
     },
     "get-pip": {
@@ -79,7 +79,7 @@
     },
     "python": {
       "major": "3.7",
-      "version": "3.7.12"
+      "version": "3.7.13"
     },
     "variants": [
       "bullseye",
@@ -89,7 +89,7 @@
       "windows/windowsservercore-ltsc2022",
       "windows/windowsservercore-1809"
     ],
-    "version": "7.3.8"
+    "version": "7.3.9"
   },
   "3.8": {
     "arches": {
