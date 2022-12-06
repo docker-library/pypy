@@ -18,28 +18,28 @@ ENV LANG C.UTF-8
 # ensure local pypy3 is preferred over distribution pypy3
 ENV PATH /opt/pypy/bin:$PATH
 
-# Python 3.8.13
-ENV PYPY_VERSION 7.3.9
+# Python 3.8.15
+ENV PYPY_VERSION 7.3.10
 
 RUN set -eux; \
 	\
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
 		'amd64') \
-			url='https://downloads.python.org/pypy/pypy3.8-v7.3.9-linux64.tar.bz2'; \
-			sha256='08be25ec82fc5d23b78563eda144923517daba481a90af0ace7a047c9c9a3c34'; \
+			url='https://downloads.python.org/pypy/pypy3.8-v7.3.10-linux64.tar.bz2'; \
+			sha256='ceef6496fd4ab1c99e3ec22ce657b8f10f8bb77a32427fadfb5e1dd943806011'; \
 			;; \
 		'arm64') \
-			url='https://downloads.python.org/pypy/pypy3.8-v7.3.9-aarch64.tar.bz2'; \
-			sha256='5e124455e207425e80731dff317f0432fa0aba1f025845ffca813770e2447e32'; \
+			url='https://downloads.python.org/pypy/pypy3.8-v7.3.10-aarch64.tar.bz2'; \
+			sha256='e4caa1a545f22cfee87d5b9aa6f8852347f223643ad7d2562e0b2a2f4663ad98'; \
 			;; \
 		'i386') \
-			url='https://downloads.python.org/pypy/pypy3.8-v7.3.9-linux32.tar.bz2'; \
-			sha256='4b261516c6c59078ab0c8bd7207327a1b97057b4ec1714ed5e79a026f9efd492'; \
+			url='https://downloads.python.org/pypy/pypy3.8-v7.3.10-linux32.tar.bz2'; \
+			sha256='b70ed7fdc73a74ebdc04f07439f7bad1a849aaca95e26b4a74049d0e483f071c'; \
 			;; \
 		's390x') \
-			url='https://downloads.python.org/pypy/pypy3.8-v7.3.9-s390x.tar.bz2'; \
-			sha256='c6177a0016c9145c7b99fddb5d74cc2e518ccdb216a6deb51ef6a377510cc930'; \
+			url='https://downloads.python.org/pypy/pypy3.8-v7.3.10-s390x.tar.bz2'; \
+			sha256='c294f8e815158388628fe77ac5b8ad6cd93c8db1359091fa02d41cf6da4d61a1'; \
 			;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
