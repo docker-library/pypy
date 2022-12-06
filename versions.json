@@ -49,52 +49,6 @@
     ],
     "version": "7.3.10"
   },
-  "3.7": {
-    "arches": {
-      "amd64": {
-        "sha256": "c58195124d807ecc527499ee19bc511ed753f4f2e418203ca51bc7e3b124d5d1",
-        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.9-linux64.tar.bz2"
-      },
-      "arm64v8": {
-        "sha256": "dfc62f2c453fb851d10a1879c6e75c31ffebbf2a44d181bb06fcac4750d023fc",
-        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.9-aarch64.tar.bz2"
-      },
-      "darwin-amd64": {
-        "sha256": "12d92f578a200d50959e55074b20f29f93c538943e9a6e6522df1a1cc9cef542",
-        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.9-osx64.tar.bz2"
-      },
-      "i386": {
-        "sha256": "3398cece0167b81baa219c9cd54a549443d8c0a6b553ec8ec13236281e0d86cd",
-        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.9-linux32.tar.bz2"
-      },
-      "s390x": {
-        "sha256": "fcab3b9e110379948217cf592229542f53c33bfe881006f95ce30ac815a6df48",
-        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.9-s390x.tar.bz2"
-      },
-      "windows-amd64": {
-        "sha256": "8acb184b48fb3c854de0662e4d23a66b90e73b1ab73a86695022c12c745d8b00",
-        "url": "https://downloads.python.org/pypy/pypy3.7-v7.3.9-win64.zip"
-      }
-    },
-    "get-pip": {
-      "sha256": "95c5ee602b2f3cc50ae053d716c3c89bea62c58568f64d7d25924d399b2d5218",
-      "url": "https://github.com/pypa/get-pip/raw/3843bff3a0a61da5b63ea0b7d34794c5c51a2f11/get-pip.py",
-      "version": "3843bff3a0a61da5b63ea0b7d34794c5c51a2f11"
-    },
-    "python": {
-      "major": "3.7",
-      "version": "3.7.13"
-    },
-    "variants": [
-      "bullseye",
-      "slim-bullseye",
-      "buster",
-      "slim-buster",
-      "windows/windowsservercore-ltsc2022",
-      "windows/windowsservercore-1809"
-    ],
-    "version": "7.3.9"
-  },
   "3.8": {
     "arches": {
       "amd64": {
