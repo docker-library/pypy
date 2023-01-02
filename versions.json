@@ -52,32 +52,32 @@
   "3.8": {
     "arches": {
       "amd64": {
-        "sha256": "ceef6496fd4ab1c99e3ec22ce657b8f10f8bb77a32427fadfb5e1dd943806011",
-        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.10-linux64.tar.bz2"
+        "sha256": "470330e58ac105c094041aa07bb05676b06292bc61409e26f5c5593ebb2292d9",
+        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.11-linux64.tar.bz2"
       },
       "arm64v8": {
-        "sha256": "e4caa1a545f22cfee87d5b9aa6f8852347f223643ad7d2562e0b2a2f4663ad98",
-        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.10-aarch64.tar.bz2"
+        "sha256": "9a2fa0b8d92b7830aa31774a9a76129b0ff81afbd22cd5c41fbdd9119e859f55",
+        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.11-aarch64.tar.bz2"
       },
       "darwin-": {
-        "sha256": "6cb1429371e4854b718148a509d80143f801e3abfc72fef58d88aeeee1e98f9e",
-        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.10-macos_arm64.tar.bz2"
+        "sha256": "78cdc79ff964c4bfd13eb45a7d43a011cbe8d8b513323d204891f703fdc4fa1a",
+        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.11-macos_arm64.tar.bz2"
       },
       "darwin-amd64": {
-        "sha256": "399eb1ce4c65f62f6a096b7c273536601b7695e3c0dc0457393a659b95b7615b",
-        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.10-macos_x86_64.tar.bz2"
+        "sha256": "194ca0b4d91ae409a9cb1a59eb7572d7affa8a451ea3daf26539aa515443433a",
+        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.11-macos_x86_64.tar.bz2"
       },
       "i386": {
-        "sha256": "b70ed7fdc73a74ebdc04f07439f7bad1a849aaca95e26b4a74049d0e483f071c",
-        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.10-linux32.tar.bz2"
+        "sha256": "a79b31fce8f5bc1f9940b6777134189a1d3d18bda4b1c830384cda90077c9176",
+        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.11-linux32.tar.bz2"
       },
       "s390x": {
-        "sha256": "c294f8e815158388628fe77ac5b8ad6cd93c8db1359091fa02d41cf6da4d61a1",
-        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.10-s390x.tar.bz2"
+        "sha256": "eab7734d86d96549866f1cba67f4f9c73c989f6a802248beebc504080d4c3fcd",
+        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.11-s390x.tar.bz2"
       },
       "windows-amd64": {
-        "sha256": "362dd624d95bd64743190ea2539b97452ecb3d53ea92ceb2fbe9f48dc60e6b8f",
-        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.10-win64.zip"
+        "sha256": "0f46fb6df32941ea016f77cfd7e9b426d5ac25a2af2453414df66103941c8435",
+        "url": "https://downloads.python.org/pypy/pypy3.8-v7.3.11-win64.zip"
       }
     },
     "get-pip": {
@@ -87,7 +87,7 @@
     },
     "python": {
       "major": "3.8",
-      "version": "3.8.15"
+      "version": "3.8.16"
     },
     "variants": [
       "bullseye",
@@ -97,7 +97,7 @@
       "windows/windowsservercore-ltsc2022",
       "windows/windowsservercore-1809"
     ],
-    "version": "7.3.10"
+    "version": "7.3.11"
   },
   "3.9": {
     "arches": {
