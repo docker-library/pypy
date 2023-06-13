@@ -4,7 +4,7 @@
 # PLEASE DO NOT EDIT IT DIRECTLY.
 #
 
-FROM buildpack-deps:buster
+FROM buildpack-deps:bookworm
 
 # runtime dependencies
 RUN set -eux; \
@@ -22,7 +22,7 @@ ENV LANG C.UTF-8
 # ensure local pypy3 is preferred over distribution pypy3
 ENV PATH /opt/pypy/bin:$PATH
 
-# Python 3.9.16
+# Python 3.8.16
 ENV PYPY_VERSION 7.3.11
 
 RUN set -eux; \
@@ -30,20 +30,20 @@ RUN set -eux; \
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
 		'amd64') \
-			url='https://downloads.python.org/pypy/pypy3.9-v7.3.11-linux64.tar.bz2'; \
-			sha256='d506172ca11071274175d74e9c581c3166432d0179b036470e3b9e8d20eae581'; \
+			url='https://downloads.python.org/pypy/pypy3.8-v7.3.11-linux64.tar.bz2'; \
+			sha256='470330e58ac105c094041aa07bb05676b06292bc61409e26f5c5593ebb2292d9'; \
 			;; \
 		'arm64') \
-			url='https://downloads.python.org/pypy/pypy3.9-v7.3.11-aarch64.tar.bz2'; \
-			sha256='09175dc652ed895d98e9ad63d216812bf3ee7e398d900a9bf9eb2906ba8302b9'; \
+			url='https://downloads.python.org/pypy/pypy3.8-v7.3.11-aarch64.tar.bz2'; \
+			sha256='9a2fa0b8d92b7830aa31774a9a76129b0ff81afbd22cd5c41fbdd9119e859f55'; \
 			;; \
 		'i386') \
-			url='https://downloads.python.org/pypy/pypy3.9-v7.3.11-linux32.tar.bz2'; \
-			sha256='0099d72c2897b229057bff7e2c343624aeabdc60d6fb43ca882bff082f1ffa48'; \
+			url='https://downloads.python.org/pypy/pypy3.8-v7.3.11-linux32.tar.bz2'; \
+			sha256='a79b31fce8f5bc1f9940b6777134189a1d3d18bda4b1c830384cda90077c9176'; \
 			;; \
 		's390x') \
-			url='https://downloads.python.org/pypy/pypy3.9-v7.3.11-s390x.tar.bz2'; \
-			sha256='e1f30f2ddbe3f446ddacd79677b958d56c07463b20171fb2abf8f9a3178b79fc'; \
+			url='https://downloads.python.org/pypy/pypy3.8-v7.3.11-s390x.tar.bz2'; \
+			sha256='eab7734d86d96549866f1cba67f4f9c73c989f6a802248beebc504080d4c3fcd'; \
 			;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
@@ -51,7 +51,7 @@ RUN set -eux; \
 	savedAptMark="$(apt-mark showmanual)"; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
-# sometimes "pypy3" itself is linked against libexpat1 / libncurses5, sometimes they're ".so" files in "/opt/pypy/lib/pypy3.9"
+# sometimes "pypy3" itself is linked against libexpat1 / libncurses5, sometimes they're ".so" files in "/opt/pypy/lib/pypy3.8"
 		libexpat1 \
 		libncurses5 \
 		libncursesw6 \
@@ -71,7 +71,7 @@ RUN set -eux; \
 # smoke test
 	pypy3 --version; \
 	\
-	cd /opt/pypy/lib/pypy3.9; \
+	cd /opt/pypy/lib/pypy3.8; \
 # on pypy3, rebuild gdbm ffi bits for compatibility with Debian Stretch+
 	if [ -f _gdbm_build.py ]; then \
 		pypy3 _gdbm_build.py; \
@@ -93,7 +93,7 @@ RUN set -eux; \
 	apt-mark auto '.*' > /dev/null; \
 	[ -z "$savedAptMark" ] || apt-mark manual $savedAptMark > /dev/null; \
 	find /opt/pypy -type f -executable -exec ldd '{}' ';' \
-		| awk '/=>/ { print $(NF-1) }' \
+		| awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); print so }' \
 		| sort -u \
 		| xargs -r dpkg-query --search \
 		| cut -d: -f1 \

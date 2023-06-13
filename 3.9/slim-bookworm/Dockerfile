@@ -4,7 +4,7 @@
 # PLEASE DO NOT EDIT IT DIRECTLY.
 #
 
-FROM debian:buster-slim
+FROM debian:bookworm-slim
 
 RUN set -eux; \
 	apt-get update; \
@@ -95,7 +95,7 @@ RUN set -eux; \
 	apt-mark auto '.*' > /dev/null; \
 	[ -z "$savedAptMark" ] || apt-mark manual $savedAptMark > /dev/null; \
 	find /opt/pypy -type f -executable -exec ldd '{}' ';' \
-		| awk '/=>/ { print $(NF-1) }' \
+		| awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); print so }' \
 		| sort -u \
 		| xargs -r dpkg-query --search \
 		| cut -d: -f1 \
