@@ -110,8 +110,8 @@ for version in "${versions[@]}"; do
 			},
 			variants: [
 				(
+					"bookworm",
 					"bullseye",
-					"buster",
 					empty # trailing comma
 				| ., "slim-" + .),
 
