@@ -4,11 +4,15 @@
 # PLEASE DO NOT EDIT IT DIRECTLY.
 #
 
-FROM debian:bookworm-slim
+FROM buildpack-deps:bullseye
 
+# runtime dependencies
 RUN set -eux; \
 	apt-get update; \
-	apt-get install -y --no-install-recommends ca-certificates; \
+	apt-get install -y --no-install-recommends \
+		tcl \
+		tk \
+	; \
 	rm -rf /var/lib/apt/lists/*
 
 # http://bugs.python.org/issue19846
@@ -18,28 +22,28 @@ ENV LANG C.UTF-8
 # ensure local pypy3 is preferred over distribution pypy3
 ENV PATH /opt/pypy/bin:$PATH
 
-# Python 3.8.16
-ENV PYPY_VERSION 7.3.11
+# Python 3.10.12
+ENV PYPY_VERSION 7.3.12
 
 RUN set -eux; \
 	\
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
 		'amd64') \
-			url='https://downloads.python.org/pypy/pypy3.8-v7.3.11-linux64.tar.bz2'; \
-			sha256='470330e58ac105c094041aa07bb05676b06292bc61409e26f5c5593ebb2292d9'; \
+			url='https://downloads.python.org/pypy/pypy3.10-v7.3.12-linux64.tar.bz2'; \
+			sha256='6c577993160b6f5ee8cab73cd1a807affcefafe2f7441c87bd926c10505e8731'; \
 			;; \
 		'arm64') \
-			url='https://downloads.python.org/pypy/pypy3.8-v7.3.11-aarch64.tar.bz2'; \
-			sha256='9a2fa0b8d92b7830aa31774a9a76129b0ff81afbd22cd5c41fbdd9119e859f55'; \
+			url='https://downloads.python.org/pypy/pypy3.10-v7.3.12-aarch64.tar.bz2'; \
+			sha256='26208b5a134d9860a08f74cce60960005758e82dc5f0e3566a48ed863a1f16a1'; \
 			;; \
 		'i386') \
-			url='https://downloads.python.org/pypy/pypy3.8-v7.3.11-linux32.tar.bz2'; \
-			sha256='a79b31fce8f5bc1f9940b6777134189a1d3d18bda4b1c830384cda90077c9176'; \
+			url='https://downloads.python.org/pypy/pypy3.10-v7.3.12-linux32.tar.bz2'; \
+			sha256='811667825ae58ada4b7c3d8bc1b5055b9f9d6a377e51aedfbe0727966603f60e'; \
 			;; \
 		's390x') \
-			url='https://downloads.python.org/pypy/pypy3.8-v7.3.11-s390x.tar.bz2'; \
-			sha256='eab7734d86d96549866f1cba67f4f9c73c989f6a802248beebc504080d4c3fcd'; \
+			url='https://downloads.python.org/pypy/pypy3.10-v7.3.12-s390x.tar.bz2'; \
+			sha256='043c13a585479428b463ab69575a088db74aadc16798d6e677d97f563585fee3'; \
 			;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
@@ -47,9 +51,7 @@ RUN set -eux; \
 	savedAptMark="$(apt-mark showmanual)"; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
-		bzip2 \
-		wget \
-# sometimes "pypy3" itself is linked against libexpat1 / libncurses5, sometimes they're ".so" files in "/opt/pypy/lib/pypy3.8"
+# sometimes "pypy3" itself is linked against libexpat1 / libncurses5, sometimes they're ".so" files in "/opt/pypy/lib/pypy3.10"
 		libexpat1 \
 		libncurses5 \
 		libncursesw6 \
@@ -69,25 +71,21 @@ RUN set -eux; \
 # smoke test
 	pypy3 --version; \
 	\
-	cd /opt/pypy/lib/pypy3.8; \
+	cd /opt/pypy/lib/pypy3.10; \
 # on pypy3, rebuild gdbm ffi bits for compatibility with Debian Stretch+
 	if [ -f _gdbm_build.py ]; then \
-		apt-get install -y --no-install-recommends gcc libc6-dev libgdbm-dev; \
 		pypy3 _gdbm_build.py; \
 	fi; \
 # https://github.com/docker-library/pypy/issues/24#issuecomment-409408657
 	if [ -f _ssl_build.py ]; then \
-		apt-get install -y --no-install-recommends gcc libc6-dev libssl-dev; \
 		pypy3 _ssl_build.py; \
 	fi; \
 # https://github.com/docker-library/pypy/issues/42
 	if [ -f _lzma_build.py ]; then \
-		apt-get install -y --no-install-recommends gcc libc6-dev liblzma-dev; \
 		pypy3 _lzma_build.py; \
 	fi; \
 # https://github.com/docker-library/pypy/issues/68
 	if [ -f _sqlite3_build.py ]; then \
-		apt-get install -y --no-install-recommends gcc libc6-dev libsqlite3-dev; \
 		pypy3 _sqlite3_build.py; \
 	fi; \
 # TODO rebuild other cffi modules here too? (other _*_build.py files)
@@ -119,9 +117,6 @@ ENV PYTHON_GET_PIP_URL https://github.com/pypa/get-pip/raw/3843bff3a0a61da5b63ea
 ENV PYTHON_GET_PIP_SHA256 95c5ee602b2f3cc50ae053d716c3c89bea62c58568f64d7d25924d399b2d5218
 
 RUN set -ex; \
-	apt-get update; \
-	apt-get install -y --no-install-recommends wget; \
-	rm -rf /var/lib/apt/lists/*; \
 	\
 	wget -O get-pip.py "$PYTHON_GET_PIP_URL"; \
 	echo "$PYTHON_GET_PIP_SHA256 *get-pip.py" | sha256sum --check --strict -; \
@@ -135,7 +130,6 @@ RUN set -ex; \
 		"pip == $pipVersion" \
 		"setuptools == $setuptoolsVersion" \
 	; \
-	apt-get purge -y --auto-remove wget; \
 # smoke test
 	pip --version; \
 	\
