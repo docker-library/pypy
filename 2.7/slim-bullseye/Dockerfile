@@ -19,27 +19,27 @@ ENV LANG C.UTF-8
 ENV PATH /opt/pypy/bin:$PATH
 
 # Python 2.7.18
-ENV PYPY_VERSION 7.3.12
+ENV PYPY_VERSION 7.3.13
 
 RUN set -eux; \
 	\
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
 		'amd64') \
-			url='https://downloads.python.org/pypy/pypy2.7-v7.3.12-linux64.tar.bz2'; \
-			sha256='1a61a2574b79466f606010f2999a2b995bd96cd085f91a78ebdd3d5c2c40e81d'; \
+			url='https://downloads.python.org/pypy/pypy2.7-v7.3.13-linux64.tar.bz2'; \
+			sha256='e41ceb5dc6c4d3a9311ed5f88edfeedbf3e8abbd1ed3c4f2e151a90a5cf4e1d7'; \
 			;; \
 		'arm64') \
-			url='https://downloads.python.org/pypy/pypy2.7-v7.3.12-aarch64.tar.bz2'; \
-			sha256='e04dcb6286a7b4724ec3f0e50d3cc1ba8583301dd1658c06d7f37599e4201c59'; \
+			url='https://downloads.python.org/pypy/pypy2.7-v7.3.13-aarch64.tar.bz2'; \
+			sha256='f1e20f833cc86a097c1f1318069fc17d01c3988678c1438fe27ed567fcb5cfd0'; \
 			;; \
 		'i386') \
-			url='https://downloads.python.org/pypy/pypy2.7-v7.3.12-linux32.tar.bz2'; \
-			sha256='abf3ae477bd0e526ac6dcefe0bfa845e1535aa053342c0d641219bfcde4b9b56'; \
+			url='https://downloads.python.org/pypy/pypy2.7-v7.3.13-linux32.tar.bz2'; \
+			sha256='b727d2e759a740f45bab1e333029d001c4384b52949bcbb4bd2ad7912eae8dad'; \
 			;; \
 		's390x') \
-			url='https://downloads.python.org/pypy/pypy2.7-v7.3.12-s390x.tar.bz2'; \
-			sha256='80c0154d8b0949f9dc6a227c322abbc9590c8ae4c9f11c13bf4022aa38b82064'; \
+			url='https://downloads.python.org/pypy/pypy2.7-v7.3.13-s390x.tar.bz2'; \
+			sha256='fbb2f3d92831c02b094f17e9609b95a6202d4bdcddae437e380ab14388d4556e'; \
 			;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
