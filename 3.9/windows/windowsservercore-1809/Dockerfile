@@ -51,7 +51,7 @@ RUN $url = 'https://downloads.python.org/pypy/pypy3.9-v7.3.13-win64.zip'; \
 	Write-Host ('Downloading {0} ...' -f $url); \
 	Invoke-WebRequest -Uri $url -OutFile 'pypy.zip'; \
 	\
-	$sha256 = '55ab1c7ba3c3bf04d3acba15eeee3e2e6a185e7a6cb80dd4c0ee2d804a78b4a3'; \
+	$sha256 = '85745a2055c4a8cefac9b6d3f7f305b1edaaf62468c8f640b4511d9dd21d091c'; \
 	Write-Host ('Verifying sha256 ({0}) ...' -f $sha256); \
 	if ((Get-FileHash pypy.zip -Algorithm sha256).Hash -ne $sha256) { \
 		Write-Host 'FAILED!'; \

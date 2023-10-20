@@ -110,11 +110,11 @@
         "url": "https://downloads.python.org/pypy/pypy3.9-v7.3.13-aarch64.tar.bz2"
       },
       "darwin-": {
-        "sha256": "333131d62c502aa5d5fb58a58cdf01de4bfb2c1db5a9bb4c04515258abe6bced",
+        "sha256": "a07b17a790a1952b551e69d47d77a5546ad5e666ed1bd90b9ad60baaca6aa51e",
         "url": "https://downloads.python.org/pypy/pypy3.9-v7.3.13-macos_arm64.tar.bz2"
       },
       "darwin-amd64": {
-        "sha256": "e6404fb743d193a7edea6b33f2f44125116f84eccc83b55846493e595b0f3653",
+        "sha256": "180802aa0122d4a05ec480bf3130c78591ba88fdde25d8e65a92d4a798b318a3",
         "url": "https://downloads.python.org/pypy/pypy3.9-v7.3.13-macos_x86_64.tar.bz2"
       },
       "i386": {
@@ -126,7 +126,7 @@
         "url": "https://downloads.python.org/pypy/pypy3.9-v7.3.13-s390x.tar.bz2"
       },
       "windows-amd64": {
-        "sha256": "55ab1c7ba3c3bf04d3acba15eeee3e2e6a185e7a6cb80dd4c0ee2d804a78b4a3",
+        "sha256": "85745a2055c4a8cefac9b6d3f7f305b1edaaf62468c8f640b4511d9dd21d091c",
         "url": "https://downloads.python.org/pypy/pypy3.9-v7.3.13-win64.zip"
       }
     },
