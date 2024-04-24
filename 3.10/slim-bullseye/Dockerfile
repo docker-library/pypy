@@ -18,28 +18,28 @@ ENV LANG C.UTF-8
 # ensure local pypy3 is preferred over distribution pypy3
 ENV PATH /opt/pypy/bin:$PATH
 
-# Python 3.10.13
-ENV PYPY_VERSION 7.3.15
+# Python 3.10.14
+ENV PYPY_VERSION 7.3.16
 
 RUN set -eux; \
 	\
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
 		'amd64') \
-			url='https://downloads.python.org/pypy/pypy3.10-v7.3.15-linux64.tar.bz2'; \
-			sha256='33c584e9a70a71afd0cb7dd8ba9996720b911b3b8ed0156aea298d4487ad22c3'; \
+			url='https://downloads.python.org/pypy/pypy3.10-v7.3.16-linux64.tar.bz2'; \
+			sha256='404e6180d6caf9258eaab0c02c72018e9aa8eb03ab9094a0ff17ee5e3b265ac1'; \
 			;; \
 		'arm64') \
-			url='https://downloads.python.org/pypy/pypy3.10-v7.3.15-aarch64.tar.bz2'; \
-			sha256='52146fccaf64e87e71d178dda8de63c01577ec3923073dc69e1519622bcacb74'; \
+			url='https://downloads.python.org/pypy/pypy3.10-v7.3.16-aarch64.tar.bz2'; \
+			sha256='fc720999bc5050e1d3706b3b6445e695cf42bfc71ebc7c88ed6bb88828b1d385'; \
 			;; \
 		'i386') \
-			url='https://downloads.python.org/pypy/pypy3.10-v7.3.15-linux32.tar.bz2'; \
-			sha256='75dd58c9abd8b9d78220373148355bc3119febcf27a2c781d64ad85e7232c4aa'; \
+			url='https://downloads.python.org/pypy/pypy3.10-v7.3.16-linux32.tar.bz2'; \
+			sha256='0df48aa780159e879ac89a805d143e4a6cd1b842f98046f5a3f865814bfaa2a4'; \
 			;; \
 		's390x') \
-			url='https://downloads.python.org/pypy/pypy3.10-v7.3.15-s390x.tar.bz2'; \
-			sha256='209e57596381e13c9914d1332f359dc4b78de06576739747eb797bdbf85062b8'; \
+			url='https://downloads.python.org/pypy/pypy3.10-v7.3.16-s390x.tar.bz2'; \
+			sha256='af97efe498a209ba18c7bc7d084164a9907fb3736588b6864955177e19d5216a'; \
 			;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
