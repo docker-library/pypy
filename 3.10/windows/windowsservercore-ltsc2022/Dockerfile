@@ -45,13 +45,13 @@ RUN $url = 'https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81C
 	Write-Host 'Complete.'
 
 # Python 3.10.14
-ENV PYPY_VERSION 7.3.16
+ENV PYPY_VERSION 7.3.17
 
-RUN $url = 'https://downloads.python.org/pypy/pypy3.10-v7.3.16-win64.zip'; \
+RUN $url = 'https://downloads.python.org/pypy/pypy3.10-v7.3.17-win64.zip'; \
 	Write-Host ('Downloading {0} ...' -f $url); \
 	Invoke-WebRequest -Uri $url -OutFile 'pypy.zip'; \
 	\
-	$sha256 = 'e08415a2f35c6ecf2342b504bdfde11e4c5eca3fc5ef7fd2214ff064a5a54396'; \
+	$sha256 = 'cab794a03ddda26238c72942ea6f225612e0dc17c76cac6652da83a95024e6e8'; \
 	Write-Host ('Verifying sha256 ({0}) ...' -f $sha256); \
 	if ((Get-FileHash pypy.zip -Algorithm sha256).Hash -ne $sha256) { \
 		Write-Host 'FAILED!'; \
@@ -65,7 +65,7 @@ RUN $url = 'https://downloads.python.org/pypy/pypy3.10-v7.3.16-win64.zip'; \
 	Remove-Item pypy.zip -Force; \
 	\
 	Write-Host 'Renaming ...'; \
-	Rename-Item -Path C:\pypy3.10-v7.3.16-win64 -NewName C:\pypy; \
+	Rename-Item -Path C:\pypy3.10-v7.3.17-win64 -NewName C:\pypy; \
 	\
 	Write-Host 'Verifying install ("pypy --version") ...'; \
 	pypy --version; \
