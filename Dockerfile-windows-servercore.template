@@ -1,5 +1,4 @@
 {{ def is_3: env.version | startswith("3") -}}
-{{ def cmd: if [ "3.8" ] | index(env.version) then "pypy3" else "pypy" end -}}
 FROM mcr.microsoft.com/windows/{{ env.windowsVariant }}:{{ env.windowsRelease }}
 
 # $ProgressPreference: https://github.com/PowerShell/PowerShell/issues/2138#issuecomment-251261324
@@ -68,8 +67,8 @@ RUN $url = '{{ .arches["windows-amd64"].url }}'; \
 	Write-Host 'Renaming ...'; \
 	Rename-Item -Path C:\{{ .arches["windows-amd64"].url | rtrimstr(".zip") | split("/")[-1] }} -NewName C:\pypy; \
 	\
-	Write-Host 'Verifying install ("{{ cmd }} --version") ...'; \
-	{{ cmd }} --version; \
+	Write-Host 'Verifying install ("pypy --version") ...'; \
+	pypy --version; \
 	\
 	Write-Host 'Cleanup install ...'; \
 	Get-ChildItem \
@@ -100,11 +99,11 @@ RUN Write-Host ('Downloading get-pip.py ({0}) ...' -f $env:PYTHON_GET_PIP_URL); 
 		exit 1; \
 	}; \
 	\
-	$pipVersion = & {{ cmd }} -c 'import ensurepip; print(ensurepip._PIP_VERSION)'; \
-	$setuptoolsVersion = & {{ cmd }} -c 'import ensurepip; print(ensurepip._SETUPTOOLS_VERSION)'; \
+	$pipVersion = & pypy -c 'import ensurepip; print(ensurepip._PIP_VERSION)'; \
+	$setuptoolsVersion = & pypy -c 'import ensurepip; print(ensurepip._SETUPTOOLS_VERSION)'; \
 	\
 	Write-Host ('Installing "pip == {0}", "setuptools == {1}" ...' -f $pipVersion, $setuptoolsVersion); \
-	{{ cmd }} get-pip.py \
+	pypy get-pip.py \
 		--disable-pip-version-check \
 		--no-cache-dir \
 		('pip == {0}' -f $pipVersion) \
@@ -131,4 +130,4 @@ RUN Write-Host ('Downloading get-pip.py ({0}) ...' -f $env:PYTHON_GET_PIP_URL); 
 	\
 	Write-Host 'Complete.'
 
-CMD {{ [ cmd ] | @json }}
+CMD ["pypy"]
