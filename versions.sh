@@ -117,6 +117,7 @@ for version in "${versions[@]}"; do
 
 				if $doc.arches | keys | any(startswith("windows-")) then
 					(
+						"ltsc2025",
 						"ltsc2022",
 						"1809",
 						empty # trailing comma
