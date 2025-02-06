@@ -49,28 +49,28 @@
   "3.10": {
     "arches": {
       "amd64": {
-        "sha256": "fdcdb9b24f1a7726003586503fdeb264fd68fc37fbfcea022dcfe825a7fee18b",
-        "url": "https://downloads.python.org/pypy/pypy3.10-v7.3.17-linux64.tar.bz2"
+        "sha256": "834ccd4544bb47112a66977add7e47f30619f74061ae990876bcba95d98c27c5",
+        "url": "https://downloads.python.org/pypy/pypy3.10-v7.3.18-linux64.tar.bz2"
       },
       "arm64v8": {
-        "sha256": "53b6e5907df869c49e4eae7aca09fba16d150741097efb245892c1477d2395f2",
-        "url": "https://downloads.python.org/pypy/pypy3.10-v7.3.17-aarch64.tar.bz2"
+        "sha256": "e843aecd48eb06b625af67891b99e3440313cfb64c6851fc37df1e5572c8ef9e",
+        "url": "https://downloads.python.org/pypy/pypy3.10-v7.3.18-aarch64.tar.bz2"
       },
       "darwin-": {
-        "sha256": "a050e25e8d686853dd5afc363e55625165825dacfb55f8753d8225ebe417cfd2",
-        "url": "https://downloads.python.org/pypy/pypy3.10-v7.3.17-macos_arm64.tar.bz2"
+        "sha256": "1d47da22bc9f7b5329f97c9c7b3ee0b051252ff1e82ca76999ad2d44758be41f",
+        "url": "https://downloads.python.org/pypy/pypy3.10-v7.3.18-macos_arm64.tar.bz2"
       },
       "darwin-amd64": {
-        "sha256": "6c2c5f2300d7564e711421b4968abd63243cb96f76e363975dd648ebf4a362ee",
-        "url": "https://downloads.python.org/pypy/pypy3.10-v7.3.17-macos_x86_64.tar.bz2"
+        "sha256": "b7031cbf815b7ba26ed2503b76ee3e73d7322b55f3671219019e8385042e212f",
+        "url": "https://downloads.python.org/pypy/pypy3.10-v7.3.18-macos_x86_64.tar.bz2"
       },
       "i386": {
-        "sha256": "e534110e1047da37c1d586c392f74de3424f871d906a2083de6d41f2a8cc9164",
-        "url": "https://downloads.python.org/pypy/pypy3.10-v7.3.17-linux32.tar.bz2"
+        "sha256": "34ef09a481254aad0f22bf09fd7c99efb65ffef4f79f5b4222505f55f8d9c22e",
+        "url": "https://downloads.python.org/pypy/pypy3.10-v7.3.18-linux32.tar.bz2"
       },
       "windows-amd64": {
-        "sha256": "cab794a03ddda26238c72942ea6f225612e0dc17c76cac6652da83a95024e6e8",
-        "url": "https://downloads.python.org/pypy/pypy3.10-v7.3.17-win64.zip"
+        "sha256": "e7ae89c5d45efcc927425281c870d0ce62cd624628f869cb0a25a0647e39a7be",
+        "url": "https://downloads.python.org/pypy/pypy3.10-v7.3.18-win64.zip"
       }
     },
     "get-pip": {
@@ -80,7 +80,7 @@
     },
     "python": {
       "major": "3.10",
-      "version": "3.10.14"
+      "version": "3.10.19"
     },
     "variants": [
       "bookworm",
@@ -91,6 +91,6 @@
       "windows/windowsservercore-ltsc2022",
       "windows/windowsservercore-1809"
     ],
-    "version": "7.3.17"
+    "version": "7.3.18"
   }
 }
