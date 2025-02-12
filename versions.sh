@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# TODO refactor this repo to have something like "stable" and "rc" top-level folders so we add/remove Python versions correctly automatically? (and then can add pre-releases too)
+# (see "stable" boolean in upstream "versions.json"; maybe some logic to only include RCs if they're "newer" than the stable release?)
+
 # https://downloads.python.org/pypy/versions.json
 # https://www.pypy.org/download.html
 # https://downloads.python.org/pypy/
@@ -111,7 +114,9 @@ for version in "${versions[@]}"; do
 			variants: [
 				(
 					"bookworm",
-					"bullseye",
+					if env.version | IN("2.7", "3.10") then
+						"bullseye"
+					else empty end,
 					empty # trailing comma
 				| ., "slim-" + .),
 
