@@ -2,28 +2,28 @@
   "2.7": {
     "arches": {
       "amd64": {
-        "sha256": "1da34354e5fa59400609e94c00ba6feccf5aa575abb26fb6caf9c2ac16100ff4",
-        "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.18-linux64.tar.bz2"
+        "sha256": "d38445508c2eaf14ebb380d9c1ded321c5ebeae31c7e66800173d83cb8ddf423",
+        "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.19-linux64.tar.bz2"
       },
       "arm64v8": {
-        "sha256": "d647cad5be915df65f44277fd051c8d52e708d22838b5cb21b2de033530acc80",
-        "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.18-aarch64.tar.bz2"
+        "sha256": "fe89d4fd4af13f76dfe7315975003518cf176520e3ccec1544a88d174f50910e",
+        "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.19-aarch64.tar.bz2"
       },
       "darwin-": {
-        "sha256": "48927b1931a4feadea945f7c988c429b42e9fb6567af3810ab86ad95efbe98bc",
-        "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.18-macos_arm64.tar.bz2"
+        "sha256": "28780e0b908ad6db4b4e096f4237124be79ecc9731946d840d9c8749eb67a759",
+        "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.19-macos_arm64.tar.bz2"
       },
       "darwin-amd64": {
-        "sha256": "db9d2bcc8dbe089b34a19083a11116697e8679acc2c47a2862264429810f666e",
-        "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.18-macos_x86_64.tar.bz2"
+        "sha256": "6be28d448d8e64fffc586d9b0ae4d09064a83ccaeb5b8060c651c5cd9ae06878",
+        "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.19-macos_x86_64.tar.bz2"
       },
       "i386": {
-        "sha256": "54990fb1ae2266c260a7ce694b84ab91a8d0d298da440cd5695ac671dc5615e2",
-        "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.18-linux32.tar.bz2"
+        "sha256": "cc52df02b6926bd8645c1651cd7f6637ce51c2f352d0fb3c6b9330d15194b409",
+        "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.19-linux32.tar.bz2"
       },
       "windows-amd64": {
-        "sha256": "c1d397743a6727832affddb15296dbeeb4a7602d91ae64114d798a9cc71179ca",
-        "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.18-win64.zip"
+        "sha256": "fbdcd4fe681981c020a25c1a35225209dc3d651f6117ebe9e4d212b66a2b46ec",
+        "url": "https://downloads.python.org/pypy/pypy2.7-v7.3.19-win64.zip"
       }
     },
     "get-pip": {
@@ -44,7 +44,7 @@
       "windows/windowsservercore-ltsc2022",
       "windows/windowsservercore-1809"
     ],
-    "version": "7.3.18"
+    "version": "7.3.19"
   },
   "3.10": {
     "arches": {
