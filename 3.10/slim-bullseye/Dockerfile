@@ -18,7 +18,7 @@ ENV LANG C.UTF-8
 # ensure local pypy3 is preferred over distribution pypy3
 ENV PATH /opt/pypy/bin:$PATH
 
-# Python 3.10.19
+# Python 3.10.16
 ENV PYPY_VERSION 7.3.19
 
 RUN set -eux; \

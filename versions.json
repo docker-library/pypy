@@ -80,7 +80,7 @@
     },
     "python": {
       "major": "3.10",
-      "version": "3.10.19"
+      "version": "3.10.16"
     },
     "variants": [
       "bookworm",
