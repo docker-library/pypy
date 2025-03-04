@@ -115,6 +115,9 @@ RUN set -eux; \
 	\
 # smoke test
 	{{ cmd }} --version; \
+# verify (C)Python version is accurate
+	pypyPython="$({{ cmd }} -c 'import sys; print(".".join(map(str, sys.version_info[0:3])))')"; \
+	[ "$pypyPython" = {{ .python.version | @sh }} ]; \
 	\
 {{ if is_3 then ( -}}
 	cd {{ lib_pypy }}; \

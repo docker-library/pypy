@@ -69,6 +69,12 @@ RUN $url = '{{ .arches["windows-amd64"].url }}'; \
 	\
 	Write-Host 'Verifying install ("pypy --version") ...'; \
 	pypy --version; \
+# double quotes in Docker WCOW + PowerShell is something that's totally and completely unsupported thanks to cmd.exe: https://github.com/docker-library/pypy/pull/88#issuecomment-2699167808
+	$pypyPython = pypy -c 'import sys; print(''.''.join(map(str, sys.version_info[0:3])))'; \
+	if ($pypyPython -ne {{ .python.version | @sh }}) { \
+		Write-Host ('Python version mismatch: {0} vs {1}' -f $pypyPython, {{ .python.version | @sh }}); \
+		exit 1; \
+	}; \
 	\
 	Write-Host 'Cleanup install ...'; \
 	Get-ChildItem \

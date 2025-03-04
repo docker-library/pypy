@@ -64,6 +64,9 @@ RUN set -eux; \
 	\
 # smoke test
 	pypy --version; \
+# verify (C)Python version is accurate
+	pypyPython="$(pypy -c 'import sys; print(".".join(map(str, sys.version_info[0:3])))')"; \
+	[ "$pypyPython" = '2.7.18' ]; \
 	\
 	apt-mark auto '.*' > /dev/null; \
 	[ -z "$savedAptMark" ] || apt-mark manual $savedAptMark > /dev/null; \

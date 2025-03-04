@@ -64,6 +64,9 @@ RUN set -eux; \
 	\
 # smoke test
 	pypy3 --version; \
+# verify (C)Python version is accurate
+	pypyPython="$(pypy3 -c 'import sys; print(".".join(map(str, sys.version_info[0:3])))')"; \
+	[ "$pypyPython" = '3.10.16' ]; \
 	\
 	cd /opt/pypy/lib/pypy3.10; \
 # on pypy3, rebuild gdbm ffi bits for compatibility with Debian Stretch+
