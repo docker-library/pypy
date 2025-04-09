@@ -169,40 +169,7 @@ RUN set -eux; \
 # smoke test again, to be sure
 	{{ cmd }} --version; \
 	\
-	find /opt/pypy -depth \
-		\( \
-			\( -type d -a \( -name test -o -name tests \) \) \
-			-o \
-			\( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
-		\) -exec rm -rf '{}' +
-
-# https://github.com/pypa/get-pip
-ENV PYTHON_GET_PIP_URL {{ ."get-pip".url }}
-ENV PYTHON_GET_PIP_SHA256 {{ ."get-pip".sha256 }}
-
-RUN set -ex; \
-{{ if is_slim then ( -}}
-	apt-get update; \
-	apt-get install -y --no-install-recommends wget; \
-	rm -rf /var/lib/apt/lists/*; \
-{{ ) else "" end -}}
-	\
-	wget -O get-pip.py "$PYTHON_GET_PIP_URL"; \
-	echo "$PYTHON_GET_PIP_SHA256 *get-pip.py" | sha256sum --check --strict -; \
-	\
-	pipVersion="$({{ cmd }} -c 'import ensurepip; print(ensurepip._PIP_VERSION)')"; \
-	setuptoolsVersion="$({{ cmd }} -c 'import ensurepip; print(ensurepip._SETUPTOOLS_VERSION)')"; \
-	\
-	{{ cmd }} get-pip.py \
-		--disable-pip-version-check \
-		--no-cache-dir \
-		"pip == $pipVersion" \
-		"setuptools == $setuptoolsVersion" \
-	; \
-{{ if is_slim then ( -}}
-	apt-get purge -y --auto-remove wget; \
-{{ ) else "" end -}}
-# smoke test
+	{{ cmd }} -m ensurepip --default-pip; \
 	pip --version; \
 	\
 	find /opt/pypy -depth \
@@ -210,7 +177,6 @@ RUN set -ex; \
 			\( -type d -a \( -name test -o -name tests \) \) \
 			-o \
 			\( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
-		\) -exec rm -rf '{}' +; \
-	rm -f get-pip.py
+		\) -exec rm -rf '{}' +
 
 CMD {{ [ cmd ] | @json }}

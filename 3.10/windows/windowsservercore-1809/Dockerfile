@@ -70,46 +70,8 @@ RUN $url = 'https://downloads.python.org/pypy/pypy3.10-v7.3.19-win64.zip'; \
 	Write-Host 'Verifying install ("pypy --version") ...'; \
 	pypy --version; \
 	\
-	Write-Host 'Cleanup install ...'; \
-	Get-ChildItem \
-		-Path C:\pypy \
-		-Include @( 'test', 'tests' ) \
-		-Directory \
-		-Recurse \
-		| Remove-Item -Force -Recurse; \
-	Get-ChildItem \
-		-Path C:\pypy \
-		-Include @( '*.pyc', '*.pyo' ) \
-		-File \
-		-Recurse \
-		| Remove-Item -Force; \
-	\
-	Write-Host 'Complete.'
-
-# https://github.com/pypa/get-pip
-ENV PYTHON_GET_PIP_URL https://github.com/pypa/get-pip/raw/3843bff3a0a61da5b63ea0b7d34794c5c51a2f11/get-pip.py
-ENV PYTHON_GET_PIP_SHA256 95c5ee602b2f3cc50ae053d716c3c89bea62c58568f64d7d25924d399b2d5218
-
-RUN Write-Host ('Downloading get-pip.py ({0}) ...' -f $env:PYTHON_GET_PIP_URL); \
-	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; \
-	Invoke-WebRequest -Uri $env:PYTHON_GET_PIP_URL -OutFile 'get-pip.py'; \
-	Write-Host ('Verifying sha256 ({0}) ...' -f $env:PYTHON_GET_PIP_SHA256); \
-	if ((Get-FileHash 'get-pip.py' -Algorithm sha256).Hash -ne $env:PYTHON_GET_PIP_SHA256) { \
-		Write-Host 'FAILED!'; \
-		exit 1; \
-	}; \
-	\
-	$pipVersion = & pypy -c 'import ensurepip; print(ensurepip._PIP_VERSION)'; \
-	$setuptoolsVersion = & pypy -c 'import ensurepip; print(ensurepip._SETUPTOOLS_VERSION)'; \
-	\
-	Write-Host ('Installing "pip == {0}", "setuptools == {1}" ...' -f $pipVersion, $setuptoolsVersion); \
-	pypy get-pip.py \
-		--disable-pip-version-check \
-		--no-cache-dir \
-		('pip == {0}' -f $pipVersion) \
-		('setuptools == {0}' -f $setuptoolsVersion) \
-	; \
-	Remove-Item get-pip.py -Force; \
+	Write-Host 'Installing pip ...'; \
+	pypy -m ensurepip --default-pip; \
 	\
 	Write-Host 'Verifying pip install ...'; \
 	pip --version; \
