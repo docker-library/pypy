@@ -1,4 +1,4 @@
-{{ def is_3: env.version | startswith("3") -}}
+{{ include "shared" -}}
 FROM mcr.microsoft.com/windows/{{ env.windowsVariant }}:{{ env.windowsRelease }}
 
 # $ProgressPreference: https://github.com/PowerShell/PowerShell/issues/2138#issuecomment-251261324
@@ -70,50 +70,19 @@ RUN $url = '{{ .arches["windows-amd64"].url }}'; \
 	Write-Host 'Verifying install ("pypy --version") ...'; \
 	pypy --version; \
 	\
-	Write-Host 'Cleanup install ...'; \
-	Get-ChildItem \
-		-Path C:\pypy \
-		-Include @( 'test', 'tests' ) \
-		-Directory \
-		-Recurse \
-		| Remove-Item -Force -Recurse; \
-	Get-ChildItem \
-		-Path C:\pypy \
-		-Include @( '*.pyc', '*.pyo' ) \
-		-File \
-		-Recurse \
-		| Remove-Item -Force; \
-	\
-	Write-Host 'Complete.'
-
-# https://github.com/pypa/get-pip
-ENV PYTHON_GET_PIP_URL {{ ."get-pip".url }}
-ENV PYTHON_GET_PIP_SHA256 {{ ."get-pip".sha256 }}
-
-RUN Write-Host ('Downloading get-pip.py ({0}) ...' -f $env:PYTHON_GET_PIP_URL); \
-	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; \
-	Invoke-WebRequest -Uri $env:PYTHON_GET_PIP_URL -OutFile 'get-pip.py'; \
-	Write-Host ('Verifying sha256 ({0}) ...' -f $env:PYTHON_GET_PIP_SHA256); \
-	if ((Get-FileHash 'get-pip.py' -Algorithm sha256).Hash -ne $env:PYTHON_GET_PIP_SHA256) { \
-		Write-Host 'FAILED!'; \
-		exit 1; \
-	}; \
-	\
-	$pipVersion = & pypy -c 'import ensurepip; print(ensurepip._PIP_VERSION)'; \
-	$setuptoolsVersion = & pypy -c 'import ensurepip; print(ensurepip._SETUPTOOLS_VERSION)'; \
-	\
-	Write-Host ('Installing "pip == {0}", "setuptools == {1}" ...' -f $pipVersion, $setuptoolsVersion); \
-	pypy get-pip.py \
-		--disable-pip-version-check \
-		--no-cache-dir \
-		('pip == {0}' -f $pipVersion) \
-		('setuptools == {0}' -f $setuptoolsVersion) \
-	; \
-	Remove-Item get-pip.py -Force; \
+	Write-Host 'Installing pip ...'; \
+	pypy -m ensurepip --default-pip; \
 	\
 	Write-Host 'Verifying pip install ...'; \
 	pip --version; \
 	\
+{{ if is_3 and minor >= 12 then "" else ( -}}
+	Write-Host 'Installing "wheel" (backwards compat) ...'; \
+# https://github.com/docker-library/python/issues/952
+# https://github.com/docker-library/python/issues/1023
+	pip install --disable-pip-version-check --no-cache-dir --no-compile 'wheel<0.46'; \
+	\
+{{ ) end -}}
 	Write-Host 'Cleanup install ...'; \
 	Get-ChildItem \
 		-Path C:\pypy \

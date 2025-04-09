@@ -101,40 +101,17 @@ RUN set -eux; \
 # smoke test again, to be sure
 	pypy3 --version; \
 	\
+	pypy3 -m ensurepip --default-pip; \
+	pip --version; \
+# https://github.com/docker-library/python/issues/952
+# https://github.com/docker-library/python/issues/1023
+	pip install --disable-pip-version-check --no-cache-dir --no-compile 'wheel<0.46'; \
+	\
 	find /opt/pypy -depth \
 		\( \
 			\( -type d -a \( -name test -o -name tests \) \) \
 			-o \
 			\( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
 		\) -exec rm -rf '{}' +
-
-# https://github.com/pypa/get-pip
-ENV PYTHON_GET_PIP_URL https://github.com/pypa/get-pip/raw/3843bff3a0a61da5b63ea0b7d34794c5c51a2f11/get-pip.py
-ENV PYTHON_GET_PIP_SHA256 95c5ee602b2f3cc50ae053d716c3c89bea62c58568f64d7d25924d399b2d5218
-
-RUN set -ex; \
-	\
-	wget -O get-pip.py "$PYTHON_GET_PIP_URL"; \
-	echo "$PYTHON_GET_PIP_SHA256 *get-pip.py" | sha256sum --check --strict -; \
-	\
-	pipVersion="$(pypy3 -c 'import ensurepip; print(ensurepip._PIP_VERSION)')"; \
-	setuptoolsVersion="$(pypy3 -c 'import ensurepip; print(ensurepip._SETUPTOOLS_VERSION)')"; \
-	\
-	pypy3 get-pip.py \
-		--disable-pip-version-check \
-		--no-cache-dir \
-		"pip == $pipVersion" \
-		"setuptools == $setuptoolsVersion" \
-	; \
-# smoke test
-	pip --version; \
-	\
-	find /opt/pypy -depth \
-		\( \
-			\( -type d -a \( -name test -o -name tests \) \) \
-			-o \
-			\( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
-		\) -exec rm -rf '{}' +; \
-	rm -f get-pip.py
 
 CMD ["pypy3"]
