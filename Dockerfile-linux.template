@@ -1,16 +1,9 @@
 {{
+	include "shared"
+	;
 	def is_slim:
 		env.variant
 		| startswith("slim-")
-	;
-	def is_3:
-		env.version
-		| startswith("3")
-	;
-	def minor:
-		env.version
-		| split(".")[1]
-		| tonumber
 	;
 	def lib_pypy:
 		if is_3 and minor >= 8 then
@@ -171,6 +164,11 @@ RUN set -eux; \
 	\
 	{{ cmd }} -m ensurepip --default-pip; \
 	pip --version; \
+{{ if is_3 and minor >= 12 then "" else ( -}}
+# https://github.com/docker-library/python/issues/952
+# https://github.com/docker-library/python/issues/1023
+	pip install --disable-pip-version-check --no-cache-dir --no-compile 'wheel<0.46'; \
+{{ ) end -}}
 	\
 	find /opt/pypy -depth \
 		\( \

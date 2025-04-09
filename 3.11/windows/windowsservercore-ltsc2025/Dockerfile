@@ -76,6 +76,11 @@ RUN $url = 'https://downloads.python.org/pypy/pypy3.11-v7.3.19-win64.zip'; \
 	Write-Host 'Verifying pip install ...'; \
 	pip --version; \
 	\
+	Write-Host 'Installing "wheel" (backwards compat) ...'; \
+# https://github.com/docker-library/python/issues/952
+# https://github.com/docker-library/python/issues/1023
+	pip install --disable-pip-version-check --no-cache-dir --no-compile 'wheel<0.46'; \
+	\
 	Write-Host 'Cleanup install ...'; \
 	Get-ChildItem \
 		-Path C:\pypy \

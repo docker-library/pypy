@@ -103,6 +103,9 @@ RUN set -eux; \
 	\
 	pypy3 -m ensurepip --default-pip; \
 	pip --version; \
+# https://github.com/docker-library/python/issues/952
+# https://github.com/docker-library/python/issues/1023
+	pip install --disable-pip-version-check --no-cache-dir --no-compile 'wheel<0.46'; \
 	\
 	find /opt/pypy -depth \
 		\( \
