@@ -114,7 +114,7 @@ for version in "${versions[@]}"; do
 			variants: [
 				(
 					"bookworm",
-					if env.version | IN("2.7", "3.10") then
+					if env.version | IN("2.7") then
 						"bullseye"
 					else empty end,
 					empty # trailing comma

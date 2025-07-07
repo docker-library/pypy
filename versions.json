@@ -45,52 +45,6 @@
     ],
     "version": "7.3.20"
   },
-  "3.10": {
-    "arches": {
-      "amd64": {
-        "sha256": "c73ac2cc2380ac9227fd297482bf2a3e17a80618ba46db7544d535515321ec1e",
-        "url": "https://downloads.python.org/pypy/pypy3.10-v7.3.19-linux64.tar.bz2"
-      },
-      "arm64v8": {
-        "sha256": "af27a589178f11198e2244ab65ca510630ba97c131d7ccc4021eb5bc58de7f57",
-        "url": "https://downloads.python.org/pypy/pypy3.10-v7.3.19-aarch64.tar.bz2"
-      },
-      "darwin-": {
-        "sha256": "3db8a03fc496164801646844d7f3b12baa0adb3ad9a0b7cb124521bc2e168a36",
-        "url": "https://downloads.python.org/pypy/pypy3.10-v7.3.19-macos_arm64.tar.bz2"
-      },
-      "darwin-amd64": {
-        "sha256": "2c5e5c2a33ac882551d7f28b98d19d486b8995aa50824a73b4edcc6aeec35c63",
-        "url": "https://downloads.python.org/pypy/pypy3.10-v7.3.19-macos_x86_64.tar.bz2"
-      },
-      "i386": {
-        "sha256": "e63a4fcad2641ee541e852918befb513abf04ce7070f743a50778cae9f9da80e",
-        "url": "https://downloads.python.org/pypy/pypy3.10-v7.3.19-linux32.tar.bz2"
-      },
-      "windows-amd64": {
-        "sha256": "c0d07bba6c8fb4e5804f4a8b3f8ef07cc3d89f6ad1db42a45ffb9be60bbb7cc2",
-        "url": "https://downloads.python.org/pypy/pypy3.10-v7.3.19-win64.zip"
-      }
-    },
-    "get-pip": {
-      "sha256": "95c5ee602b2f3cc50ae053d716c3c89bea62c58568f64d7d25924d399b2d5218",
-      "url": "https://github.com/pypa/get-pip/raw/3843bff3a0a61da5b63ea0b7d34794c5c51a2f11/get-pip.py",
-      "version": "3843bff3a0a61da5b63ea0b7d34794c5c51a2f11"
-    },
-    "python": {
-      "major": "3.10",
-      "version": "3.10.16"
-    },
-    "variants": [
-      "bookworm",
-      "slim-bookworm",
-      "bullseye",
-      "slim-bullseye",
-      "windows/windowsservercore-ltsc2025",
-      "windows/windowsservercore-ltsc2022"
-    ],
-    "version": "7.3.19"
-  },
   "3.11": {
     "arches": {
       "amd64": {
