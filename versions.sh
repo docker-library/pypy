@@ -113,10 +113,8 @@ for version in "${versions[@]}"; do
 			},
 			variants: [
 				(
+					"trixie",
 					"bookworm",
-					if env.version | IN("2.7") then
-						"bullseye"
-					else empty end,
 					empty # trailing comma
 				| ., "slim-" + .),
 

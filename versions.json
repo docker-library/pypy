@@ -36,10 +36,10 @@
       "version": "2.7.18"
     },
     "variants": [
+      "trixie",
+      "slim-trixie",
       "bookworm",
       "slim-bookworm",
-      "bullseye",
-      "slim-bullseye",
       "windows/windowsservercore-ltsc2025",
       "windows/windowsservercore-ltsc2022"
     ],
@@ -82,6 +82,8 @@
       "version": "3.11.13"
     },
     "variants": [
+      "trixie",
+      "slim-trixie",
       "bookworm",
       "slim-bookworm",
       "windows/windowsservercore-ltsc2025",
