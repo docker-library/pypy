@@ -4,11 +4,15 @@
 # PLEASE DO NOT EDIT IT DIRECTLY.
 #
 
-FROM debian:bookworm-slim
+FROM buildpack-deps:trixie
 
+# runtime dependencies
 RUN set -eux; \
 	apt-get update; \
-	apt-get install -y --no-install-recommends ca-certificates; \
+	apt-get install -y --no-install-recommends \
+		tcl \
+		tk \
+	; \
 	rm -rf /var/lib/apt/lists/*
 
 # http://bugs.python.org/issue19846
@@ -43,8 +47,6 @@ RUN set -eux; \
 	savedAptMark="$(apt-mark showmanual)"; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
-		bzip2 \
-		wget \
 # sometimes "pypy3" (or associated .so files) has dynamic links to different system libraries
 # we install them here, and then use "ldd" further down to only keep what we actually need (which might even differ per architecture)
 		libfontconfig1 \
@@ -65,22 +67,18 @@ RUN set -eux; \
 	cd /opt/pypy/lib/pypy3.11; \
 # on pypy3, rebuild gdbm ffi bits for compatibility with Debian Stretch+
 	if [ -f _gdbm_build.py ]; then \
-		apt-get install -y --no-install-recommends gcc libc6-dev libgdbm-dev; \
 		pypy3 _gdbm_build.py; \
 	fi; \
 # https://github.com/docker-library/pypy/issues/24#issuecomment-409408657
 	if [ -f _ssl_build.py ]; then \
-		apt-get install -y --no-install-recommends gcc libc6-dev libssl-dev; \
 		pypy3 _ssl_build.py; \
 	fi; \
 # https://github.com/docker-library/pypy/issues/42
 	if [ -f _lzma_build.py ]; then \
-		apt-get install -y --no-install-recommends gcc libc6-dev liblzma-dev; \
 		pypy3 _lzma_build.py; \
 	fi; \
 # https://github.com/docker-library/pypy/issues/68
 	if [ -f _sqlite3_build.py ]; then \
-		apt-get install -y --no-install-recommends gcc libc6-dev libsqlite3-dev; \
 		pypy3 _sqlite3_build.py; \
 	fi; \
 # TODO rebuild other cffi modules here too? (other _*_build.py files)
@@ -89,7 +87,6 @@ RUN set -eux; \
 	[ -z "$savedAptMark" ] || apt-mark manual $savedAptMark > /dev/null; \
 	export shellPid="$$"; \
 	find /opt/pypy -type f -executable -exec ldd '{}' ';' \
-		| grep -vE 'lib(tcl|tk|X[a-z]*)[0-9]*[.]' \
 		| awk '/not found/ { print >> "/dev/stderr"; system("kill -9 -$shellPid") } /=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1 || index(so, "/opt/pypy/") == 1) { next }; gsub("^/(usr/)?", "", so); printf "*%s\n", so }' \
 		| sort -u \
 		| xargs -rt dpkg-query --search \
