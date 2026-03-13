@@ -50,6 +50,9 @@ RUN set -eux; \
 	find /opt/pypy/lib* -depth -type d -a \( -name test -o -name tests \) -exec rm -rf '{}' +; \
 	rm pypy.tar.bz2; \
 	\
+# delete a few (sometimes) problematic bundled libraries
+	rm -v /opt/pypy/lib/libtk*.so /opt/pypy/lib/libz.so*; \
+	\
 	ln -sv '/opt/pypy/bin/pypy' /usr/local/bin/; \
 	\
 # smoke test
