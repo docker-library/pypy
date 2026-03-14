@@ -116,17 +116,20 @@ RUN set -eux; \
 	find /opt/pypy/lib* -depth -type d -a \( -name test -o -name tests \) -exec rm -rf '{}' +; \
 	rm pypy.tar.bz2; \
 	\
+# delete a few (sometimes) problematic bundled libraries
+	rm -v /opt/pypy/lib/libtk*.so /opt/pypy/lib/libz.so*; \
+	\
 	ln -sv {{ "/opt/pypy/bin/" + cmd | @sh }} /usr/local/bin/; \
 	\
 # smoke test
 	{{ cmd }} --version; \
 	\
 {{ if is_3 then ( -}}
+# rebuild several cffi modules for compatibility
 	cd {{ lib_pypy }}; \
 {{
 	[
 		{
-			comment: "on pypy3, rebuild gdbm ffi bits for compatibility with Debian Stretch+",
 			file: "_gdbm_build.py",
 			deps: "libgdbm-dev",
 		},
@@ -145,18 +148,33 @@ RUN set -eux; \
 			file: "_sqlite3_build.py",
 			deps: "libsqlite3-dev",
 		},
+		{
+			file: "_tkinter/tklib_build.py",
+			deps: "tk-dev",
+		},
 		empty # trailing comma hack
 	] | map(
 -}}
-# {{ .comment }}
 	if [ -f {{ .file }} ]; then \
-{{ if is_slim then ( -}}
-		apt-get install -y --no-install-recommends gcc libc6-dev {{ .deps }}; \
+{{ if .comment then ( -}}
+# {{ .comment }}
+{{ ) else "" end -}}
+{{
+	(
+		if is_slim then
+			"gcc libc6-dev " + .deps
+		elif .deps == "tk-dev" then
+			.deps
+		else "" end
+	) as $install
+	| if $install != "" then
+( -}}
+		apt-get install -y --no-install-recommends {{ $install }}; \
 {{ ) else "" end -}}
 		{{ cmd }} {{ .file }}; \
 	fi; \
 {{ ) | join("") -}}
-# TODO rebuild other cffi modules here too? (other _*_build.py files)
+# TODO rebuild other cffi modules here too? (other _*_build.py files; see https://github.com/pypy/pypy/blob/0f013f041fff7fb9a23b22dae8437e82beb6a279/lib_pypy/pypy_tools/build_cffi_imports.py#L25-L40)
 	\
 {{ ) else "" end -}}
 	apt-mark auto '.*' > /dev/null; \

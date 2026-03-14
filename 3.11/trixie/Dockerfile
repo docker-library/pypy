@@ -22,24 +22,24 @@ ENV LANG C.UTF-8
 # ensure local pypy3 is preferred over distribution pypy3
 ENV PATH /opt/pypy/bin:$PATH
 
-# Python 3.11.13
-ENV PYPY_VERSION 7.3.20
+# Python 3.11.15
+ENV PYPY_VERSION 7.3.21
 
 RUN set -eux; \
 	\
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
 		'amd64') \
-			url='https://downloads.python.org/pypy/pypy3.11-v7.3.20-linux64.tar.bz2'; \
-			sha256='1410db3a7ae47603e2b7cbfd7ff6390b891b2e041c9eb4f1599f333677bccb3e'; \
+			url='https://downloads.python.org/pypy/pypy3.11-v7.3.21-linux64.tar.bz2'; \
+			sha256='43f27af8ee6673932493f2696ab407321cbf79dbed94c03d8b39e603f8f5f765'; \
 			;; \
 		'arm64') \
-			url='https://downloads.python.org/pypy/pypy3.11-v7.3.20-aarch64.tar.bz2'; \
-			sha256='9347fe691a07fd9df17a1b186554fb9d9e6210178ffef19520a579ce1f9eb741'; \
+			url='https://downloads.python.org/pypy/pypy3.11-v7.3.21-aarch64.tar.bz2'; \
+			sha256='6141f5c64dd96faf87e0a3f7f362521eadd26d5e3f851f90fc386a72208f8c18'; \
 			;; \
 		'i386') \
-			url='https://downloads.python.org/pypy/pypy3.11-v7.3.20-linux32.tar.bz2'; \
-			sha256='d08ce15dd61e9ace5e010b047104f0137110a258184e448ea8239472f10cf99b'; \
+			url='https://downloads.python.org/pypy/pypy3.11-v7.3.21-linux32.tar.bz2'; \
+			sha256='0c449ff3f20589e331f163807a0200a9bf5dd375c95f513a0f60bf7524795f02'; \
 			;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
@@ -59,29 +59,36 @@ RUN set -eux; \
 	find /opt/pypy/lib* -depth -type d -a \( -name test -o -name tests \) -exec rm -rf '{}' +; \
 	rm pypy.tar.bz2; \
 	\
+# delete a few (sometimes) problematic bundled libraries
+	rm -v /opt/pypy/lib/libtk*.so /opt/pypy/lib/libz.so*; \
+	\
 	ln -sv '/opt/pypy/bin/pypy3' /usr/local/bin/; \
 	\
 # smoke test
 	pypy3 --version; \
 	\
+# rebuild several cffi modules for compatibility
 	cd /opt/pypy/lib/pypy3.11; \
-# on pypy3, rebuild gdbm ffi bits for compatibility with Debian Stretch+
 	if [ -f _gdbm_build.py ]; then \
 		pypy3 _gdbm_build.py; \
 	fi; \
-# https://github.com/docker-library/pypy/issues/24#issuecomment-409408657
 	if [ -f _ssl_build.py ]; then \
+# https://github.com/docker-library/pypy/issues/24#issuecomment-409408657
 		pypy3 _ssl_build.py; \
 	fi; \
-# https://github.com/docker-library/pypy/issues/42
 	if [ -f _lzma_build.py ]; then \
+# https://github.com/docker-library/pypy/issues/42
 		pypy3 _lzma_build.py; \
 	fi; \
-# https://github.com/docker-library/pypy/issues/68
 	if [ -f _sqlite3_build.py ]; then \
+# https://github.com/docker-library/pypy/issues/68
 		pypy3 _sqlite3_build.py; \
 	fi; \
-# TODO rebuild other cffi modules here too? (other _*_build.py files)
+	if [ -f _tkinter/tklib_build.py ]; then \
+		apt-get install -y --no-install-recommends tk-dev; \
+		pypy3 _tkinter/tklib_build.py; \
+	fi; \
+# TODO rebuild other cffi modules here too? (other _*_build.py files; see https://github.com/pypy/pypy/blob/0f013f041fff7fb9a23b22dae8437e82beb6a279/lib_pypy/pypy_tools/build_cffi_imports.py#L25-L40)
 	\
 	apt-mark auto '.*' > /dev/null; \
 	[ -z "$savedAptMark" ] || apt-mark manual $savedAptMark > /dev/null; \
