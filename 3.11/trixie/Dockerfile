@@ -23,23 +23,23 @@ ENV LANG C.UTF-8
 ENV PATH /opt/pypy/bin:$PATH
 
 # Python 3.11.15
-ENV PYPY_VERSION 7.3.21
+ENV PYPY_VERSION 7.3.22
 
 RUN set -eux; \
 	\
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
 		'amd64') \
-			url='https://downloads.python.org/pypy/pypy3.11-v7.3.21-linux64.tar.bz2'; \
-			sha256='43f27af8ee6673932493f2696ab407321cbf79dbed94c03d8b39e603f8f5f765'; \
+			url='https://downloads.python.org/pypy/pypy3.11-v7.3.22-linux64.tar.bz2'; \
+			sha256='c0c239a6b0d381338bcccf852d0690b9daca632e0216389a3796f8817fd66e0e'; \
 			;; \
 		'arm64') \
-			url='https://downloads.python.org/pypy/pypy3.11-v7.3.21-aarch64.tar.bz2'; \
-			sha256='6141f5c64dd96faf87e0a3f7f362521eadd26d5e3f851f90fc386a72208f8c18'; \
+			url='https://downloads.python.org/pypy/pypy3.11-v7.3.22-aarch64.tar.bz2'; \
+			sha256='c29a8933e2084f52df74c829aa0d8f5652b9d5919f68e9fb89cab3afe35dd884'; \
 			;; \
 		'i386') \
-			url='https://downloads.python.org/pypy/pypy3.11-v7.3.21-linux32.tar.bz2'; \
-			sha256='0c449ff3f20589e331f163807a0200a9bf5dd375c95f513a0f60bf7524795f02'; \
+			url='https://downloads.python.org/pypy/pypy3.11-v7.3.22-linux32.tar.bz2'; \
+			sha256='6fdad58d6d376810cf6291be1d396032f4da8109517357de0091adc3874f04c9'; \
 			;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
