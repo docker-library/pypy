@@ -48,28 +48,28 @@
   "3.11": {
     "arches": {
       "amd64": {
-        "sha256": "2bcab031cef7a37fe1930b51f7091e78a191ae63f80eca00a265d3378c3a645b",
-        "url": "https://downloads.python.org/pypy/pypy3.11-v7.3.23-linux64.tar.gz"
+        "sha256": "66a3657e9ddf2d62ead44d3a44b9ea2f6e7dbf28d812554cae5c982a0585bfa5",
+        "url": "https://downloads.python.org/pypy/pypy3.11-v8.0.0-linux64.tar.gz"
       },
       "arm64v8": {
-        "sha256": "ed3b27a95257a8bb88707042e6bb5fe64569d47ef44bdc9842c730667637dfbd",
-        "url": "https://downloads.python.org/pypy/pypy3.11-v7.3.23-aarch64.tar.gz"
+        "sha256": "37faf1a0b00131748910ad21844a9b1b3fedd630c89b01ec98cdb1b5466ffca5",
+        "url": "https://downloads.python.org/pypy/pypy3.11-v8.0.0-aarch64.tar.gz"
       },
       "darwin-": {
-        "sha256": "f837b3c203d60d7e25a31e267671a07ba0c9b9ac8081ad225571fb06fccf1b7b",
-        "url": "https://downloads.python.org/pypy/pypy3.11-v7.3.23-macos_arm64.tar.gz"
+        "sha256": "8fb2abc4f6e3fb5d40ad5bac5092bb6dfcc5131b4a5d2663073155084b9569e4",
+        "url": "https://downloads.python.org/pypy/pypy3.11-v8.0.0-macos_arm64.tar.gz"
       },
       "darwin-amd64": {
-        "sha256": "798279b0f233893ae22754290aedf35a1aea1ec9013a8ad8110f166d85944c91",
-        "url": "https://downloads.python.org/pypy/pypy3.11-v7.3.23-macos_x86_64.tar.gz"
+        "sha256": "5f295181d622147271b51281d4968cb9d11b8c639af9aacf07fd710a496b8d10",
+        "url": "https://downloads.python.org/pypy/pypy3.11-v8.0.0-macos_x86_64.tar.gz"
       },
       "i386": {
-        "sha256": "2b18b9d8f1ed1c69ac3aacd3b6ddbf032efb307b10240f59ca5c0aa8f23a544b",
-        "url": "https://downloads.python.org/pypy/pypy3.11-v7.3.23-linux32.tar.gz"
+        "sha256": "14fcf398eacffdc98db2f3b10ae9e8c9628932dc89b0958d145b9fd9c7307301",
+        "url": "https://downloads.python.org/pypy/pypy3.11-v8.0.0-linux32.tar.gz"
       },
       "windows-amd64": {
-        "sha256": "948b8ea58dea5b9917210fe4afd242c788fbfaba1c3f1a25e696a404f703389a",
-        "url": "https://downloads.python.org/pypy/pypy3.11-v7.3.23-win64.zip"
+        "sha256": "af7383c6c4fbccec8b904fc8f59678764253a0e9d5ad89c1f34b7d7e68afe715",
+        "url": "https://downloads.python.org/pypy/pypy3.11-v8.0.0-win64.zip"
       }
     },
     "get-pip": {
@@ -79,7 +79,7 @@
     },
     "python": {
       "major": "3.11",
-      "version": "3.11.15"
+      "version": "3.11.16"
     },
     "variants": [
       "trixie",
@@ -89,6 +89,6 @@
       "windows/windowsservercore-ltsc2025",
       "windows/windowsservercore-ltsc2022"
     ],
-    "version": "7.3.23"
+    "version": "8.0.0"
   }
 }

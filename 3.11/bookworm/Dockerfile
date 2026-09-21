@@ -22,24 +22,24 @@ ENV LANG C.UTF-8
 # ensure local pypy3 is preferred over distribution pypy3
 ENV PATH /opt/pypy/bin:$PATH
 
-# Python 3.11.15
-ENV PYPY_VERSION 7.3.23
+# Python 3.11.16
+ENV PYPY_VERSION 8.0.0
 
 RUN set -eux; \
 	\
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
 		'amd64') \
-			url='https://downloads.python.org/pypy/pypy3.11-v7.3.23-linux64.tar.gz'; \
-			sha256='2bcab031cef7a37fe1930b51f7091e78a191ae63f80eca00a265d3378c3a645b'; \
+			url='https://downloads.python.org/pypy/pypy3.11-v8.0.0-linux64.tar.gz'; \
+			sha256='66a3657e9ddf2d62ead44d3a44b9ea2f6e7dbf28d812554cae5c982a0585bfa5'; \
 			;; \
 		'arm64') \
-			url='https://downloads.python.org/pypy/pypy3.11-v7.3.23-aarch64.tar.gz'; \
-			sha256='ed3b27a95257a8bb88707042e6bb5fe64569d47ef44bdc9842c730667637dfbd'; \
+			url='https://downloads.python.org/pypy/pypy3.11-v8.0.0-aarch64.tar.gz'; \
+			sha256='37faf1a0b00131748910ad21844a9b1b3fedd630c89b01ec98cdb1b5466ffca5'; \
 			;; \
 		'i386') \
-			url='https://downloads.python.org/pypy/pypy3.11-v7.3.23-linux32.tar.gz'; \
-			sha256='2b18b9d8f1ed1c69ac3aacd3b6ddbf032efb307b10240f59ca5c0aa8f23a544b'; \
+			url='https://downloads.python.org/pypy/pypy3.11-v8.0.0-linux32.tar.gz'; \
+			sha256='14fcf398eacffdc98db2f3b10ae9e8c9628932dc89b0958d145b9fd9c7307301'; \
 			;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
