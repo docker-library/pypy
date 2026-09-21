@@ -7,6 +7,7 @@ set -Eeuo pipefail
 # https://downloads.python.org/pypy/versions.json
 # https://www.pypy.org/download.html
 # https://downloads.python.org/pypy/
+# https://github.com/pypy/pypy/blob/HEAD/pypy/tool/release/versions.json
 allVersions="$(wget -qO- 'https://downloads.python.org/pypy/versions.json' | jq -c '
 	map(
 		select(.stable and .latest_pypy) # do some minor pre-filtering to cut down the list of things to sort through

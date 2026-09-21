@@ -18,6 +18,10 @@
 		else
 			"pypy"
 		end
+	;
+	# https://github.com/pypy/pypy/blob/e778e9989a677fe281a9e2ae3447e213afcc875c/lib_pypy/cffi/ffiplatform.py#L46-L48 chdirs into tmpdir before making ext.sources absolute, breaking the legacy ffi.verify() call in _tkinter/tklib_build.py's Tk-version probe (https://github.com/pypy/pypy/issues/5585)
+	def needs_cffi_chdir_fix:
+		is_3 and minor == 12 and .version == "8.0.0"
 -}}
 {{ if is_slim then ( -}}
 FROM debian:{{ env.variant | ltrimstr("slim-") }}-slim
@@ -90,6 +94,9 @@ RUN set -eux; \
 {{ if is_slim then ( -}}
 		wget \
 {{ ) else "" end -}}
+{{ if needs_cffi_chdir_fix and is_slim then ( -}}
+		patch \
+{{ ) else "" end -}}
 # sometimes "{{ cmd }}" (or associated .so files) has dynamic links to different system libraries
 # we install them here, and then use "ldd" further down to only keep what we actually need (which might even differ per architecture)
 {{
@@ -124,6 +131,14 @@ RUN set -eux; \
 	{{ cmd }} --version; \
 	\
 {{ if is_3 then ( -}}
+{{ if needs_cffi_chdir_fix then ( -}}
+# https://github.com/pypy/pypy/blob/e778e9989a677fe281a9e2ae3447e213afcc875c/lib_pypy/cffi/ffiplatform.py#L46-L48 chdirs into tmpdir before making ext.sources absolute, which breaks _tkinter/tklib_build.py's legacy ffi.verify() call below (https://github.com/pypy/pypy/issues/5585)
+	wget -O cffi.patch 'https://github.com/pypy/pypy/commit/8c384bde537fd7742f3acc0e7ecaf55924f29b16.patch?full_index=1'; \
+	echo '957c091c80a5041d4faeb82d012ec494c8fea8d260ce5fe4a642c8c0eee03caf *cffi.patch' | sha256sum --check --strict -; \
+	patch -p2 -d {{ lib_pypy }} < cffi.patch; \
+	rm cffi.patch; \
+	\
+{{ ) else "" end -}}
 # rebuild several cffi modules for compatibility
 	cd {{ lib_pypy }}; \
 {{
