@@ -14,23 +14,23 @@ ENV LANG C.UTF-8
 ENV PATH /opt/pypy/bin:$PATH
 
 # Python 2.7.18
-ENV PYPY_VERSION 8.0.0
+ENV PYPY_VERSION 8.0.1
 
 RUN set -eux; \
 	\
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
 		'amd64') \
-			url='https://downloads.python.org/pypy/pypy2.7-v8.0.0-linux64.tar.gz'; \
-			sha256='714e8c41608d0d66588c3ba48fb788dc33a1e8a865168d165585d1660beade0d'; \
+			url='https://downloads.python.org/pypy/pypy2.7-v8.0.1-linux64.tar.gz'; \
+			sha256='78674cdf95eb4cb1dd5a9b68a70200387111cb29467f8a472ab7cf07a251653c'; \
 			;; \
 		'arm64') \
-			url='https://downloads.python.org/pypy/pypy2.7-v8.0.0-aarch64.tar.gz'; \
-			sha256='9ece5a6f575514ed38dde663e7f54e59de01c35b2df6d1ef83e25490d6b7c7b8'; \
+			url='https://downloads.python.org/pypy/pypy2.7-v8.0.1-aarch64.tar.gz'; \
+			sha256='abd5bd601fc5af143a80d02c52b5f098f0096f9b0793140353e5e3d439676b85'; \
 			;; \
 		'i386') \
-			url='https://downloads.python.org/pypy/pypy2.7-v8.0.0-linux32.tar.gz'; \
-			sha256='74d09cafbe0c85ae4c4d17d54099c6b31354235ffdd5277c01601434cc23e459'; \
+			url='https://downloads.python.org/pypy/pypy2.7-v8.0.1-linux32.tar.gz'; \
+			sha256='956365de00b86c4741acd719caff28edf3df2306962f7767ca0e2c9a73e262e5'; \
 			;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
