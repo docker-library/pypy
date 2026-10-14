@@ -22,24 +22,24 @@ ENV LANG C.UTF-8
 # ensure local pypy3 is preferred over distribution pypy3
 ENV PATH /opt/pypy/bin:$PATH
 
-# Python 3.12.14
-ENV PYPY_VERSION 8.0.0
+# Python 3.12.15
+ENV PYPY_VERSION 8.0.1
 
 RUN set -eux; \
 	\
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
 		'amd64') \
-			url='https://downloads.python.org/pypy/pypy3.12-v8.0.0-linux64.tar.gz'; \
-			sha256='a1b4851459c2b3dffccab71cb08989534fab0839deddd34f0e6bf18add256fd7'; \
+			url='https://downloads.python.org/pypy/pypy3.12-v8.0.1-linux64.tar.gz'; \
+			sha256='aeed27797777296d9c94e53bdfa608804696dbd4ff9f2213003cce064ee46ef8'; \
 			;; \
 		'arm64') \
-			url='https://downloads.python.org/pypy/pypy3.12-v8.0.0-aarch64.tar.gz'; \
-			sha256='72de008683246b0c18aeb8e163dc5d022d3f19b001e8cc5c258010968f10e336'; \
+			url='https://downloads.python.org/pypy/pypy3.12-v8.0.1-aarch64.tar.gz'; \
+			sha256='4dd9611f782f0974ffd25b521120b4297049daec05a3cec5698dbc6022c74fb9'; \
 			;; \
 		'i386') \
-			url='https://downloads.python.org/pypy/pypy3.12-v8.0.0-linux32.tar.gz'; \
-			sha256='228d793e57217f2516032db2c38e593914cb222f0d41660d1d8adbb571dcd4e3'; \
+			url='https://downloads.python.org/pypy/pypy3.12-v8.0.1-linux32.tar.gz'; \
+			sha256='aac46889fd2e85e522f5446256cd57167f91648c48d906d79eb593c812dbe55f'; \
 			;; \
 		*) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding PyPy $PYPY_VERSION binary release"; exit 1 ;; \
 	esac; \
@@ -66,12 +66,6 @@ RUN set -eux; \
 	\
 # smoke test
 	pypy3 --version; \
-	\
-# https://github.com/pypy/pypy/blob/e778e9989a677fe281a9e2ae3447e213afcc875c/lib_pypy/cffi/ffiplatform.py#L46-L48 chdirs into tmpdir before making ext.sources absolute, which breaks _tkinter/tklib_build.py's legacy ffi.verify() call below (https://github.com/pypy/pypy/issues/5585)
-	wget -O cffi.patch 'https://github.com/pypy/pypy/commit/8c384bde537fd7742f3acc0e7ecaf55924f29b16.patch?full_index=1'; \
-	echo '957c091c80a5041d4faeb82d012ec494c8fea8d260ce5fe4a642c8c0eee03caf *cffi.patch' | sha256sum --check --strict -; \
-	patch -p2 -d /opt/pypy/lib/pypy3.12 < cffi.patch; \
-	rm cffi.patch; \
 	\
 # rebuild several cffi modules for compatibility
 	cd /opt/pypy/lib/pypy3.12; \

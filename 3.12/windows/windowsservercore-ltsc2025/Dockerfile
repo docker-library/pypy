@@ -44,14 +44,14 @@ RUN $url = 'https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81C
 	\
 	Write-Host 'Complete.'
 
-# Python 3.12.14
-ENV PYPY_VERSION 8.0.0
+# Python 3.12.15
+ENV PYPY_VERSION 8.0.1
 
-RUN $url = 'https://downloads.python.org/pypy/pypy3.12-v8.0.0-win64.zip'; \
+RUN $url = 'https://downloads.python.org/pypy/pypy3.12-v8.0.1-win64.zip'; \
 	Write-Host ('Downloading {0} ...' -f $url); \
 	Invoke-WebRequest -Uri $url -OutFile 'pypy.zip'; \
 	\
-	$sha256 = '0ccfe530cf22330bd225c561bb41b6200a759d96a15847c541d4b98859adaf3f'; \
+	$sha256 = '225aa62deed1a624c86d5ffd03cc34615ff927b095d8508ad82593ee23ddce91'; \
 	Write-Host ('Verifying sha256 ({0}) ...' -f $sha256); \
 	if ((Get-FileHash pypy.zip -Algorithm sha256).Hash -ne $sha256) { \
 		Write-Host 'FAILED!'; \
@@ -65,7 +65,7 @@ RUN $url = 'https://downloads.python.org/pypy/pypy3.12-v8.0.0-win64.zip'; \
 	Remove-Item pypy.zip -Force; \
 	\
 	Write-Host 'Renaming ...'; \
-	Rename-Item -Path C:\pypy3.12-v8.0.0-win64 -NewName C:\pypy; \
+	Rename-Item -Path C:\pypy3.12-v8.0.1-win64 -NewName C:\pypy; \
 	\
 	Write-Host 'Verifying install ("pypy --version") ...'; \
 	pypy --version; \
